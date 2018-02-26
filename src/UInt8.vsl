@@ -1,0 +1,5 @@
+@primitive(Integer)
+@_mockType(ui8)
+public class UInt8 {
+
+}
