@@ -2,4 +2,7 @@
 @_mockType(ui64)
 public class UInt64 {
 
+    @backend(llvm)
+    public func +(lhs: Int, rhs: Int) -> Int native {uiadd}
+
 }

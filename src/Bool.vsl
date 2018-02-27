@@ -1,0 +1,3 @@
+@primitive(Boolean)
+@_mockType(i1)
+public class Bool {}

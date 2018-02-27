@@ -2,4 +2,7 @@
 @_mockType(i8)
 public class Int8 {
 
+    @backend(llvm)
+    public func +(lhs: Int, rhs: Int) -> Int native {iadd}
+
 }
