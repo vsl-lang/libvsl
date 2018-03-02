@@ -1,3 +1,4 @@
 @primitive(Boolean)
-@_mockType(i1)
+@booleanProvider
+@mock(i1)
 public class Bool {}

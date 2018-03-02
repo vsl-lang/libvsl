@@ -1,5 +1,5 @@
 @primitive(Integer, _precType)
-@_mockType(i32)
+@mock(i32)
 public class Int32 {
 
     @backend(llvm)

@@ -1,5 +1,5 @@
 @primitive(Integer)
-@_mockType(i8)
+@mock(i8)
 public class Int8 {
 
     @backend(llvm)
