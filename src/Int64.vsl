@@ -1,0 +1,8 @@
+@primitive(Integer)
+@mock(i64)
+public class Int64 {
+
+    @backend(llvm)
+    public func +(lhs: Int, rhs: Int) -> Int native {uiadd}
+
+}
