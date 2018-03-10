@@ -1,0 +1,8 @@
+@primitive(Integer)
+@mock(i16)
+public class Int16 {
+
+    @backend(llvm)
+    public func +(lhs: Int16, rhs: Int16) -> Int16 native {uiadd}
+
+}
