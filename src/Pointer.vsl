@@ -1,6 +1,8 @@
 @mock(pointer)
 public class Pointer<Type> {
+    init(alloc: UInt64) {
 
+    }
 }
 
 @mock(pointer8)
