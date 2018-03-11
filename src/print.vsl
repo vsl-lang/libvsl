@@ -10,8 +10,8 @@ func print(uint32: UInt32) {
     puts(`got uint32`)
 }
 
-func print(int32: Int32) {
-    puts(itoa(int32))
+func print(int: Int) {
+    puts(`got int32`)
 }
 
 func print(uint64: UInt64) {
