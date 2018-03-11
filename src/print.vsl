@@ -1,12 +1,12 @@
-func print(string: String) {
+public func print(string: String) {
     puts(string.value)
 }
 
-func print(byteSequence: ByteSequence) {
+public func print(byteSequence: ByteSequence) {
     puts(byteSequence)
 }
 
-func print(bool: Bool) {
+public func print(bool: Bool) {
     if bool {
         puts(`true`)
     } else {
@@ -14,18 +14,18 @@ func print(bool: Bool) {
     }
 }
 
-func print(uint32: UInt32) {
+public func print(uint32: UInt32) {
     puts(`got uint32`)
 }
 
-func print(int: Int) {
+public func print(int: Int) {
     puts(`got int32`)
 }
 
-func print(uint64: UInt64) {
+public func print(uint64: UInt64) {
     puts(`got uint64`)
 }
 
-func print(uint64: Int64) {
+public func print(uint64: Int64) {
     puts(`got int64`)
 }
