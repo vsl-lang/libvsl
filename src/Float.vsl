@@ -1,0 +1,4 @@
+@primitive(FloatingPoint)
+@mock(float)
+public class Float {
+}

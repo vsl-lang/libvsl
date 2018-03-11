@@ -6,4 +6,28 @@ public class Int16 {
     @inline
     public static func +(lhs: Int16, rhs: Int16) -> Int16 native(iadd)
 
+    @backend(llvm)
+    @inline
+    public static func -(lhs: Int16, rhs: Int16) -> Int16 native(isub)
+
+    @backend(llvm)
+    @inline
+    public static func *(lhs: Int16, rhs: Int16) -> Int16 native(imul)
+
+    @backend(llvm)
+    @inline
+    public static func /(lhs: Int16, rhs: Int16) -> Double native(idiv)
+
+    @backend(llvm)
+    @inline
+    public static func ==(lhs: Int16, rhs: Int16) -> Bool native(ieq)
+
+    @backend(llvm)
+    @inline
+    public static func >(lhs: Int16, rhs: Int16) -> Bool native(igt)
+
+    @backend(llvm)
+    @inline
+    public static func <(lhs: Int16, rhs: Int16) -> Bool native(ilt)
+
 }

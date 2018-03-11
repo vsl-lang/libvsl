@@ -6,6 +6,30 @@ public class UInt32 {
     @inline
     public static func +(lhs: UInt32, rhs: UInt32) -> UInt32 native(iadd)
 
+    @backend(llvm)
+    @inline
+    public static func -(lhs: UInt32, rhs: UInt32) -> UInt32 native(isub)
+
+    @backend(llvm)
+    @inline
+    public static func *(lhs: UInt32, rhs: UInt32) -> UInt32 native(imul)
+
+    @backend(llvm)
+    @inline
+    public static func /(lhs: UInt32, rhs: UInt32) -> Double native(idiv)
+
+    @backend(llvm)
+    @inline
+    public static func ==(lhs: UInt32, rhs: UInt32) -> Bool native(ieq)
+
+    @backend(llvm)
+    @inline
+    public static func >(lhs: UInt32, rhs: UInt32) -> Bool native(igt)
+
+    @backend(llvm)
+    @inline
+    public static func <(lhs: UInt32, rhs: UInt32) -> Bool native(ilt)
+
 }
 
 public typealias UInt = UInt32

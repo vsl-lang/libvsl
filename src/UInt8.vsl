@@ -6,4 +6,28 @@ public class UInt8 {
     @inline
     public static func +(lhs: UInt8, rhs: UInt8) -> UInt8 native(iadd)
 
+    @backend(llvm)
+    @inline
+    public static func -(lhs: UInt8, rhs: UInt8) -> UInt8 native(isub)
+
+    @backend(llvm)
+    @inline
+    public static func *(lhs: UInt8, rhs: UInt8) -> UInt8 native(imul)
+
+    @backend(llvm)
+    @inline
+    public static func /(lhs: UInt8, rhs: UInt8) -> Double native(idiv)
+
+    @backend(llvm)
+    @inline
+    public static func ==(lhs: UInt8, rhs: UInt8) -> Bool native(ieq)
+
+    @backend(llvm)
+    @inline
+    public static func >(lhs: UInt8, rhs: UInt8) -> Bool native(igt)
+
+    @backend(llvm)
+    @inline
+    public static func <(lhs: UInt8, rhs: UInt8) -> Bool native(ilt)
+
 }

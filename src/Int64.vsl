@@ -6,4 +6,28 @@ public class Int64 {
     @inline
     public static func +(lhs: Int64, rhs: Int64) -> Int64 native(iadd)
 
+    @backend(llvm)
+    @inline
+    public static func -(lhs: Int64, rhs: Int64) -> Int64 native(isub)
+
+    @backend(llvm)
+    @inline
+    public static func *(lhs: Int64, rhs: Int64) -> Int64 native(imul)
+
+    @backend(llvm)
+    @inline
+    public static func /(lhs: Int64, rhs: Int64) -> Double native(idiv)
+
+    @backend(llvm)
+    @inline
+    public static func ==(lhs: Int64, rhs: Int64) -> Bool native(ieq)
+
+    @backend(llvm)
+    @inline
+    public static func >(lhs: Int64, rhs: Int64) -> Bool native(igt)
+
+    @backend(llvm)
+    @inline
+    public static func <(lhs: Int64, rhs: Int64) -> Bool native(ilt)
+
 }

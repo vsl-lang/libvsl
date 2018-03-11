@@ -1,0 +1,4 @@
+@primitive(FloatingPoint)
+@mock(double)
+public class Double {
+}
