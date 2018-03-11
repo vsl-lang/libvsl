@@ -16,7 +16,7 @@ public class UInt8 {
 
     @backend(llvm)
     @inline
-    public static func /(lhs: UInt8, rhs: UInt8) -> Double native(idiv)
+    public static func /(lhs: UInt8, rhs: UInt8) -> Double native(uidiv)
 
     @backend(llvm)
     @inline
