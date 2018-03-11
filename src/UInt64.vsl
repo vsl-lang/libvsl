@@ -24,10 +24,10 @@ public class UInt64 {
 
     @backend(llvm)
     @inline
-    public static func >(lhs: UInt64, rhs: UInt64) -> Bool native(igt)
+    public static func >(lhs: UInt64, rhs: UInt64) -> Bool native(uigt)
 
     @backend(llvm)
     @inline
-    public static func <(lhs: UInt64, rhs: UInt64) -> Bool native(ilt)
+    public static func <(lhs: UInt64, rhs: UInt64) -> Bool native(uilt)
 
 }
