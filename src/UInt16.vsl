@@ -3,6 +3,6 @@
 public class UInt16 {
 
     @backend(llvm)
-    public func +(lhs: UInt16, rhs: UInt16) -> UInt16 native {uiadd}
+    public static func +(lhs: UInt16, rhs: UInt16) -> UInt16 native {uiadd}
 
 }
