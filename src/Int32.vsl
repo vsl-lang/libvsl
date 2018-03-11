@@ -3,7 +3,7 @@
 public class Int32 {
 
     @backend(llvm)
-    public static func +(lhs: Int, rhs: Int) -> Int native {iadd}
+    public static func +(lhs: Int, rhs: Int) -> Int native(iadd)
 
 }
 
