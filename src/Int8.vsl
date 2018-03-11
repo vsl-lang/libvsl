@@ -3,6 +3,7 @@
 public class Int8 {
 
     @backend(llvm)
+    @inline
     public static func +(lhs: Int8, rhs: Int8) -> Int8 native(iadd)
 
 }

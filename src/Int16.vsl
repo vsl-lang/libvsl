@@ -3,6 +3,7 @@
 public class Int16 {
 
     @backend(llvm)
+    @inline
     public static func +(lhs: Int16, rhs: Int16) -> Int16 native(uiadd)
 
 }

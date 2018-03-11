@@ -3,6 +3,7 @@
 public class Int32 {
 
     @backend(llvm)
+    @inline
     public static func +(lhs: Int32, rhs: Int32) -> Int32 native(iadd)
 
 }

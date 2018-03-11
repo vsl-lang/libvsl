@@ -3,6 +3,7 @@
 public class Int64 {
 
     @backend(llvm)
+    @inline
     public static func +(lhs: Int64, rhs: Int64) -> Int64 native(uiadd)
 
 }

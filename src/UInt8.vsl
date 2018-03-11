@@ -3,6 +3,7 @@
 public class UInt8 {
 
     @backend(llvm)
+    @inline
     public static func +(lhs: UInt8, rhs: UInt8) -> UInt8 native(uiadd)
 
 }
