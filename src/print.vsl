@@ -6,6 +6,14 @@ func print(byteSequence: ByteSequence) {
     puts(byteSequence)
 }
 
+func print(bool: Bool) {
+    if bool {
+        puts(`true`)
+    } else {
+        puts(`false`)
+    }
+}
+
 func print(uint32: UInt32) {
     puts(`got uint32`)
 }
