@@ -4,7 +4,8 @@ func puts(string: CString) -> Int32 external(puts)
 @backend(llvm)
 @mock(opaquepointer) private class CFile {}
 
-const stdout: CFile external(stdout);
+@backend(llvm)
+func fdopen(fd: Int32, mode: ByteSequence) -> CFile external(fdopen);
 
 @backend(llvm)
 func fflush(stream: CFile) -> Void external(fflush);
