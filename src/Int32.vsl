@@ -24,6 +24,18 @@ public class Int32 {
 
     @backend(llvm)
     @inline
+    public static func !=(lhs: Int32, rhs: Int32) -> Bool native(ineq)
+
+    @backend(llvm)
+    @inline
+    public static func >=(lhs: Int32, rhs: Int32) -> Bool native(ige)
+
+    @backend(llvm)
+    @inline
+    public static func <=(lhs: Int32, rhs: Int32) -> Bool native(ile)
+
+    @backend(llvm)
+    @inline
     public static func >(lhs: Int32, rhs: Int32) -> Bool native(igt)
 
     @backend(llvm)

@@ -24,6 +24,18 @@ public class UInt32 {
 
     @backend(llvm)
     @inline
+    public static func !=(lhs: UInt32, rhs: UInt32) -> Bool native(ineq)
+
+    @backend(llvm)
+    @inline
+    public static func >=(lhs: UInt32, rhs: UInt32) -> Bool native(uige)
+
+    @backend(llvm)
+    @inline
+    public static func <=(lhs: UInt32, rhs: UInt32) -> Bool native(uile)
+
+    @backend(llvm)
+    @inline
     public static func >(lhs: UInt32, rhs: UInt32) -> Bool native(uigt)
 
     @backend(llvm)

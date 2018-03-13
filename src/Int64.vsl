@@ -24,6 +24,18 @@ public class Int64 {
 
     @backend(llvm)
     @inline
+    public static func !=(lhs: Int64, rhs: Int64) -> Bool native(ineq)
+
+    @backend(llvm)
+    @inline
+    public static func >=(lhs: Int64, rhs: Int64) -> Bool native(ige)
+
+    @backend(llvm)
+    @inline
+    public static func <=(lhs: Int64, rhs: Int64) -> Bool native(ile)
+
+    @backend(llvm)
+    @inline
     public static func >(lhs: Int64, rhs: Int64) -> Bool native(igt)
 
     @backend(llvm)
