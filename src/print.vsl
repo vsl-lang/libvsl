@@ -1,5 +1,5 @@
 public func print(string: String) {
-    puts(string.value)
+    puts(string.underlyingData)
 }
 
 public func print(byteSequence: ByteSequence) {
@@ -15,17 +15,25 @@ public func print(bool: Bool) {
 }
 
 public func print(uint32: UInt32) {
-    puts(`got uint32`)
+    puts(`<<UInt32>>`)
 }
 
 public func print(int: Int) {
-    puts(`got int32`)
+    puts(`<<Int32>>`)
 }
 
 public func print(uint64: UInt64) {
-    puts(`got uint64`)
+    puts(`<<UInt64>>`)
 }
 
-public func print(uint64: Int64) {
-    puts(`got int64`)
+public func print(int64: Int64) {
+    puts(`<<Int64>>`)
+}
+
+public func print(float: Float) {
+    puts(`<<Float>>`)
+}
+
+public func print(double: Double) {
+    puts(`<<Double>>`)
 }

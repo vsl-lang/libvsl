@@ -13,9 +13,10 @@ public class String {
     // if you change these then you won't get a sane string.
 
     public const byteLength: UInt
-    const value: ByteSequence
+    public const underlyingData: ByteSequence
 
-    init(value: ByteSequence, byteLength: UInt) {
-
+    public init(value: ByteSequence, byteLength: UInt) {
+        self.underlyingData = value
+        self.byteLength = byteLength
     }
 }
