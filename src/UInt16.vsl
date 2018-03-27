@@ -20,6 +20,10 @@ public class UInt16 {
 
     @backend(llvm)
     @inline
+    public static func %(lhs: UInt16, rhs: UInt16) -> UInt16 native(uirem)
+
+    @backend(llvm)
+    @inline
     public static func ==(lhs: UInt16, rhs: UInt16) -> Bool native(ieq)
 
     @backend(llvm)
