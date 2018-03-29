@@ -1,3 +1,4 @@
+// Prints a string to STDOUT.
 public func print(string: String) {
     puts(string.underlyingData)
 }
