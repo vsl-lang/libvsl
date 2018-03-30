@@ -1,6 +1,5 @@
-@primitive(Integer)
-@mock(ui32)
-public class UInt32 {
+// Represents a 32-bit unsigned integer.
+@primitive(Integer) @mock(ui32) public class UInt32 {
 
     @backend(llvm)
     @inline

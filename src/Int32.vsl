@@ -1,6 +1,7 @@
-@primitive(Integer, _precType)
-@mock(i32)
-public class Int32 {
+// Represents a 32-bit signed integer. This is the default integer type on
+// 32-bit systems, additionally this is the int type used when interacting with
+// C APIs.
+@primitive(Integer, _precType) @mock(i32) public class Int32 {
 
     @backend(llvm)
     @inline

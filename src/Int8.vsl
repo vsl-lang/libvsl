@@ -1,6 +1,5 @@
-@primitive(Integer)
-@mock(i8)
-public class Int8 {
+// Represents an 8-bit signed integer
+@primitive(Integer) @mock(i8) public class Int8 {
 
     @backend(llvm)
     @inline

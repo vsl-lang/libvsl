@@ -1,6 +1,6 @@
-@primitive(Integer)
-@mock(ui8)
-public class UInt8 {
+// Represents an 8-bit unsigned integer. This is equivilent to a 'char' or
+// 'byte' type in terms of the amount of memory it refers to.
+@primitive(Integer) @mock(ui8) public class UInt8 {
 
     @backend(llvm)
     @inline

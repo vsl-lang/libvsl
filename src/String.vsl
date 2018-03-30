@@ -1,5 +1,5 @@
-public typealias CString = Pointer<UInt8>
-
+// A represents text. In VSL strings are interpreted as UTF8 however you can
+// always override this.
 @primitive(String, _precType)
 @dynamic(false)
 public class String {

@@ -1,6 +1,5 @@
-@primitive(Integer)
-@mock(ui16)
-public class UInt16 {
+// Represents a 16-bit unsigned integer.
+@primitive(Integer) @mock(ui16) public class UInt16 {
 
     @backend(llvm)
     @inline

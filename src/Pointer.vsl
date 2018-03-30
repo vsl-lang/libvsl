@@ -1,15 +1,20 @@
-@mock(pointer)
-public class Pointer<Type> {
+// This compiles seamlessly to an internal pointer type. You can use this for
+// interaction with C APIs and other ABIs or you can alternatively use the
+// memory allocation initializers and manage your own sections of memory.
+@mock(pointer) public class Pointer<Type> {
     init(alloc: UInt64) {
 
     }
 }
 
-@mock(pointer8)
-@primitive(ByteSequence, _precType)
-public class ByteSequence {}
+// This represents a byte sequence. Internally, this is equivilent and
+// interchangable with `Pointer<UInt8>` however the difference is that the
+// byte sequence literal can only be a ByteSequence, not a pointer.
+@mock(pointer8) @primitive(ByteSequence, _precType) public class ByteSequence {}
 
+// A CString can be used to interact with `char*` from C APIs or ABIs.
 public typealias CString = ByteSequence
 
-@mock(opaquepointer)
-public class OpaquePointer { }
+// An OpaquePointer represents a pointer to any pointer, comparable to `void*`
+// in C. This can be subclassed to add methods to a C API or ABI.
+@mock(opaquepointer) public class OpaquePointer { }

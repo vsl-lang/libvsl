@@ -1,6 +1,6 @@
-@primitive(Integer)
-@mock(i64)
-public class Int64 {
+// Represents a 64-bit signed integer. This is the default integer type on
+// 64-bit systems.
+@primitive(Integer) @mock(i64) public class Int64 {
 
     @backend(llvm)
     @inline

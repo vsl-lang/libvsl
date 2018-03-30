@@ -1,12 +1,14 @@
-// Prints a string to STDOUT.
+// Prints a string to STDOUT with a trailing newline.
 public func print(string: String) {
     puts(string.underlyingData)
 }
 
+// Prints a null-terminated byte sequence to STDOUT with a trailing newline.
 public func print(byteSequence: ByteSequence) {
     puts(byteSequence)
 }
 
+// Prints a boolean as either `true` or `false`
 public func print(bool: Bool) {
     if bool {
         puts(`true`)
@@ -15,26 +17,32 @@ public func print(bool: Bool) {
     }
 }
 
+// Prints an unsigned 32-bit integer.
 public func print(uint32: UInt32) {
     puts(`<<UInt32>>`)
 }
 
+// Prints a signed 32-bit integer.
 public func print(int: Int) {
     puts(`<<Int32>>`)
 }
 
+// Prints an unsigned 64-bit integer.
 public func print(uint64: UInt64) {
     puts(`<<UInt64>>`)
 }
 
+// Prints a signed 32-bit integer.
 public func print(int64: Int64) {
     puts(`<<Int64>>`)
 }
 
+// Prints a floating point value
 public func print(float: Float) {
     puts(`<<Float>>`)
 }
 
+// Prints a double-precision floating point value
 public func print(double: Double) {
     puts(`<<Double>>`)
 }

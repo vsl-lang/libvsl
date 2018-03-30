@@ -1,6 +1,5 @@
-@primitive(Integer)
-@mock(i16)
-public class Int16 {
+// Represents a 16-bit signed integer
+@primitive(Integer) @mock(i16) public class Int16 {
 
     @backend(llvm)
     @inline

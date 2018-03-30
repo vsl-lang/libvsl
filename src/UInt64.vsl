@@ -1,6 +1,5 @@
-@primitive(Integer)
-@mock(ui64)
-public class UInt64 {
+// Represents a 64-bit unsigned integer.
+@primitive(Integer) @mock(ui64) public class UInt64 {
 
     @backend(llvm)
     @inline
