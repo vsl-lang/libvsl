@@ -1,11 +1,11 @@
 @backend(llvm)
-func puts(string: CString) -> Int32 external(puts)
+private func puts(string: CString) -> Int32 external(puts)
 
 @backend(llvm)
 @mock(opaquepointer) private class CFile {}
 
 @backend(llvm)
-func fdopen(fd: Int32, mode: ByteSequence) -> CFile external(fdopen);
+private func fdopen(fd: Int32, mode: ByteSequence) -> CFile external(fdopen);
 
 @backend(llvm)
-func fflush(stream: CFile) -> Void external(fflush);
+private func fflush(stream: CFile) -> Void external(fflush);
