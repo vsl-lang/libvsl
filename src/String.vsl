@@ -1,5 +1,27 @@
-// A represents text. In VSL strings are interpreted as UTF8 however you can
-// always override this.
+// A string represents some section of text. A string can represent a single
+// character or an entire file. That said, it is important to understand when
+// to use strings compared to other types. If you were to read a large file into
+// a string you would eat ungodly amounts of memory so for this purpose you may
+// want to reference the File class.
+//
+// VSL strings are _immutable_. This means that you can't really 'modify' a
+// string, you must create a new one. This is automatically done with string
+// methods and operators such as `+`.
+//
+// A good question is what happens with these old strings. VSL, unlike many
+// other compiled languages, uses automatic memory management. This means that
+// VSL will intelligently determine when to clean up old strings. That said,
+// automatic memory management is not magic and it is reccomended not to
+// construct strings in large loops. For this purpose use the string methods
+// which have internal optimizations.
+//
+// Internally strings are represented as their length and their value as a null-
+// terminated UInt8 array. You can access these underlying methods using
+// self.underlyingData and self.byteLength however this is reccomended against
+// as in other implementations for other platforms these may not be available.
+// Additionally use caution when using these, modifying any of these values can
+// result in segfaults. If you are passing the underlyingData to a function
+// which may modify it, create a copy of the underlyingData before you use it.
 @primitive(String, _precType)
 @dynamic(false)
 public class String {

@@ -21,6 +21,10 @@
 
     @backend(llvm)
     @inline
+    public static func \(lhs: Int32, rhs: Int32) -> Int32 native(sdiv)
+
+    @backend(llvm)
+    @inline
     public static func %(lhs: Int32, rhs: Int32) -> Int32 native(irem)
 
     @backend(llvm)

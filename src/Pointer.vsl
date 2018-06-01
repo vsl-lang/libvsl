@@ -10,11 +10,34 @@
 // This represents a byte sequence. Internally, this is equivilent and
 // interchangable with `Pointer<UInt8>` however the difference is that the
 // byte sequence literal can only be a ByteSequence, not a pointer.
+//
+// ByteSequences do not have as many methods as Pointer<T>s however they can be
+// created at compile-time and therefor directly inserted in binary. For this
+// reason, if casted to a Pointer, it is an unsafe operation to call
+// Pointer#free()
+//
+// ByteSequences are used to represent immutable C-strings. If you see a
+// value using `const char*` it is better to use a ByteSequence as you cannot
+// perform any actions with side-effects with a byte sequence.
 @mock(pointer8) @primitive(ByteSequence, _precType) public class ByteSequence {}
 
-// A CString can be used to interact with `char*` from C APIs or ABIs.
+// A CString can be used to interact with `char*` from C APIs or ABIs. It is
+// aliased to a ByteSequence however it is recommended to treat any CString as
+// an immutable value.
 public typealias CString = ByteSequence
 
 // An OpaquePointer represents a pointer to any pointer, comparable to `void*`
 // in C. This can be subclassed to add methods to a C API or ABI.
+//
+// ### Example: Subclassing
+//
+//    private func fgets(string: ByteSequence, length: UInt32, stream: CFile) -> ByteSequence
+//    class CFile: OpaquePointer {
+//        init(path: ByteSequence, mode: ByteSequence) external(fopen)
+//
+//        func read(string: ByteSequence, length: UInt32) -> ByteSequence {
+//            return fgets(string: string, length: length, stream: self)
+//        }
+//    }
+//
 @mock(opaquepointer) public class OpaquePointer { }

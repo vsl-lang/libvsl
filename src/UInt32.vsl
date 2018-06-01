@@ -19,6 +19,10 @@
 
     @backend(llvm)
     @inline
+    public static func \(lhs: UInt32, rhs: UInt32) -> UInt32 native(udiv)
+
+    @backend(llvm)
+    @inline
     public static func %(lhs: UInt32, rhs: UInt32) -> UInt32 native(uirem)
 
     @backend(llvm)

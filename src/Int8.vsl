@@ -1,4 +1,10 @@
-// Represents an 8-bit signed integer
+// Represents an 8-bit signed integer. While for most purposes you can represent
+// the same data with `Int8` and `UInt8`, you will encounter trouble when
+// performing comparisons. Other operations are the same as VSL uses thetwo
+// 's-complement representation of signed integers.
+//
+// A defined integers in VSL cannot be implicitly cast to another due to the
+// potential unsafe loss of precision.
 @primitive(Integer) @mock(i8) public class Int8 {
 
     @backend(llvm)
@@ -16,6 +22,10 @@
     @backend(llvm)
     @inline
     public static func /(lhs: Int8, rhs: Int8) -> Double native(idiv)
+
+    @backend(llvm)
+    @inline
+    public static func \(lhs: Int8, rhs: Int8) -> Int8 native(sdiv)
 
     @backend(llvm)
     @inline

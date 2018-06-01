@@ -1,0 +1,6 @@
+/**
+ * A regular expression
+ */
+@primitive(Regex, _precType)
+@mock(pointer8)
+public class Regex {}
