@@ -1,6 +1,5 @@
-/**
- * A regular expression
- */
+// A regular expression backed by the [PCRE](https://www.pcre.org/) regular
+// expression library. Regular expressions are compiled at program startup.
 @primitive(Regex, _precType)
 @mock(pointer8)
 public class Regex {}
