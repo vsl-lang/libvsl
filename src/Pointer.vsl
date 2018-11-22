@@ -2,9 +2,10 @@
 // interaction with C APIs and other ABIs or you can alternatively use the
 // memory allocation initializers and manage your own sections of memory.
 @mock(pointer) public class Pointer<Type> {
-    init(alloc: UInt64) {
+    public init(count: UInt64) native(allocCount)
 
-    }
+    public func free() native(free)
+    public static func sizeof() -> UInt64 native(sizeof)
 }
 
 // This represents a byte sequence. Internally, this is equivilent and
