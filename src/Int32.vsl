@@ -53,6 +53,18 @@
 
     @backend(llvm)
     @inline(always)
+    public static func <<(lhs: Int32, rhs: Int32) -> Int32 native(shl);
+
+    @backend(llvm)
+    @inline(always)
+    public static func >>(lhs: Int32, rhs: Int32) -> Int32 native(ashr);
+
+    @backend(llvm)
+    @inline(always)
+    public static func >>>(lhs: Int32, rhs: Int32) -> Int32 native(lshr);
+
+    @backend(llvm)
+    @inline(always)
     public static func ~(expression: Int32) -> Int32 native(inot)
 
     @backend(llvm)

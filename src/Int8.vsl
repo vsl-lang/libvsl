@@ -57,6 +57,18 @@
 
     @backend(llvm)
     @inline(always)
+    public static func <<(lhs: Int8, rhs: Int8) -> Int8 native(shl);
+
+    @backend(llvm)
+    @inline(always)
+    public static func >>(lhs: Int8, rhs: Int8) -> Int8 native(ashr);
+
+    @backend(llvm)
+    @inline(always)
+    public static func >>>(lhs: Int8, rhs: Int8) -> Int8 native(lshr);
+
+    @backend(llvm)
+    @inline(always)
     public static func ~(expression: Int8) -> Int8 native(inot)
 
     @backend(llvm)
