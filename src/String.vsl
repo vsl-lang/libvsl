@@ -34,8 +34,8 @@ public class String {
     //     }
     // if you change these then you won't get a sane string.
 
-    public const byteLength: UInt
-    public const underlyingData: ByteSequence
+    private const byteLength: UInt
+    const underlyingData: ByteSequence
 
     public init(value: ByteSequence, byteLength: UInt) {
         self.underlyingData = value
