@@ -1,4 +1,3 @@
-@inline
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
 
 // This compiles seamlessly to an internal pointer type. You can use this for
