@@ -1,3 +1,5 @@
+const STRING_IS_
+
 // A string represents some section of text. A string can represent a single
 // character or an entire file. That said, it is important to understand when
 // to use strings compared to other types. If you were to read a large file into
@@ -34,10 +36,11 @@ public class String {
     //     }
     // if you change these then you won't get a sane string.
 
+    private const options: UInt8
     private const byteLength: UInt
-    const underlyingData: ByteSequence
+    const underlyingData: Pointer<UInt8>
 
-    public init(value: ByteSequence, byteLength: UInt) {
+    public init(value: Pointer<UInt8>, byteLength: UInt) {
         self.underlyingData = value
         self.byteLength = byteLength
     }

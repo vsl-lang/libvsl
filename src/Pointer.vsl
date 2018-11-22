@@ -6,6 +6,12 @@ private func alloc(size: UInt64) -> OpaquePointer external(malloc);
 @mock(pointer) public class Pointer<Type> {
     public func free() external(free)
 
+    @inline
+    public func dereference() -> Type native(load)
+
+    @inline
+    public func store(value: Type) -> Void native(store)
+
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
