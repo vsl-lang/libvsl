@@ -1,5 +1,10 @@
+const ARRAY_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
+
 // The array class represents a dynamically-scaled mutable list of items.
 public class Array<Type> {
+
+    // Array options
+    private let options: UInt8 = 0
 
     // Internal capacity of the array
     private let capacity: UInt
@@ -39,6 +44,8 @@ public class Array<Type> {
     }
 
     deinit {
-        self.data.free()
+        if self.options & ARRAY_DEALLOC_OPT_OUT == 0 {
+            self.data.free()
+        }
     }
 }
