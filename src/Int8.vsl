@@ -8,51 +8,51 @@
 @primitive(Integer) @mock(i8) public class Int8 {
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func +(lhs: Int8, rhs: Int8) -> Int8 native(iadd)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func -(lhs: Int8, rhs: Int8) -> Int8 native(isub)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func *(lhs: Int8, rhs: Int8) -> Int8 native(imul)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func /(lhs: Int8, rhs: Int8) -> Double native(idiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func \(lhs: Int8, rhs: Int8) -> Int8 native(sdiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func %(lhs: Int8, rhs: Int8) -> Int8 native(irem)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func ==(lhs: Int8, rhs: Int8) -> Bool native(ieq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func !=(lhs: Int8, rhs: Int8) -> Bool native(ineq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >=(lhs: Int8, rhs: Int8) -> Bool native(ige)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <=(lhs: Int8, rhs: Int8) -> Bool native(ile)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >(lhs: Int8, rhs: Int8) -> Bool native(igt)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <(lhs: Int8, rhs: Int8) -> Bool native(ilt)
 
 }

@@ -2,51 +2,51 @@
 @primitive(Integer) @mock(ui32) public class UInt32 {
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func +(lhs: UInt32, rhs: UInt32) -> UInt32 native(iadd)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func -(lhs: UInt32, rhs: UInt32) -> UInt32 native(isub)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func *(lhs: UInt32, rhs: UInt32) -> UInt32 native(imul)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func /(lhs: UInt32, rhs: UInt32) -> Double native(uidiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func \(lhs: UInt32, rhs: UInt32) -> UInt32 native(udiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func %(lhs: UInt32, rhs: UInt32) -> UInt32 native(uirem)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func ==(lhs: UInt32, rhs: UInt32) -> Bool native(ieq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func !=(lhs: UInt32, rhs: UInt32) -> Bool native(ineq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >=(lhs: UInt32, rhs: UInt32) -> Bool native(uige)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <=(lhs: UInt32, rhs: UInt32) -> Bool native(uile)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >(lhs: UInt32, rhs: UInt32) -> Bool native(uigt)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <(lhs: UInt32, rhs: UInt32) -> Bool native(uilt)
 
 }

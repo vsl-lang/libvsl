@@ -1,0 +1,14 @@
+private func trap() native(trap);
+
+// The assert function takes a condition in its argument and will error with a
+// message if the assertion fails and will critically error, exiting the program
+// immediately without the ability for error handling. Assert is recommended for
+// defensive coding as using this prevents any error handling utilities to be
+// used.
+@inline
+func assert(condition: Bool, message: String) -> Void {
+    if !condition {
+        print(message)
+        trap()
+    }
+}

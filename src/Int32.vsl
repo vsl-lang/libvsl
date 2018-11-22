@@ -4,51 +4,51 @@
 @primitive(Integer, _precType) @mock(i32) public class Int32 {
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func +(lhs: Int32, rhs: Int32) -> Int32 native(iadd)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func -(lhs: Int32, rhs: Int32) -> Int32 native(isub)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func *(lhs: Int32, rhs: Int32) -> Int32 native(imul)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func /(lhs: Int32, rhs: Int32) -> Double native(idiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func \(lhs: Int32, rhs: Int32) -> Int32 native(sdiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func %(lhs: Int32, rhs: Int32) -> Int32 native(irem)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func ==(lhs: Int32, rhs: Int32) -> Bool native(ieq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func !=(lhs: Int32, rhs: Int32) -> Bool native(ineq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >=(lhs: Int32, rhs: Int32) -> Bool native(ige)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <=(lhs: Int32, rhs: Int32) -> Bool native(ile)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >(lhs: Int32, rhs: Int32) -> Bool native(igt)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <(lhs: Int32, rhs: Int32) -> Bool native(ilt)
 
 }

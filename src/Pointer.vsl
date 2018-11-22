@@ -6,10 +6,10 @@ private func alloc(size: UInt64) -> OpaquePointer external(malloc);
 @mock(pointer) public class Pointer<Type> {
     public func free() external(free)
 
-    @inline
+    @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
-    @inline
+    @inline(always)
     public static func alloc(count: UInt64) -> Pointer<Type> {
         return Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
     }

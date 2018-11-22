@@ -2,51 +2,51 @@
 @primitive(Integer) @mock(i16) public class Int16 {
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func +(lhs: Int16, rhs: Int16) -> Int16 native(iadd)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func -(lhs: Int16, rhs: Int16) -> Int16 native(isub)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func *(lhs: Int16, rhs: Int16) -> Int16 native(imul)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func /(lhs: Int16, rhs: Int16) -> Double native(idiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func \(lhs: Int16, rhs: Int16) -> Int16 native(sdiv)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func %(lhs: Int16, rhs: Int16) -> Int16 native(irem)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func ==(lhs: Int16, rhs: Int16) -> Bool native(ieq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func !=(lhs: Int16, rhs: Int16) -> Bool native(ineq)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >=(lhs: Int16, rhs: Int16) -> Bool native(ige)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <=(lhs: Int16, rhs: Int16) -> Bool native(ile)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func >(lhs: Int16, rhs: Int16) -> Bool native(igt)
 
     @backend(llvm)
-    @inline
+    @inline(always)
     public static func <(lhs: Int16, rhs: Int16) -> Bool native(ilt)
 
 }
