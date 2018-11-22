@@ -12,6 +12,9 @@ private func alloc(size: UInt64) -> OpaquePointer external(malloc);
     @inline
     public func store(value: Type) -> Void native(store)
 
+    @inline
+    public func offset(by: Int64) -> Pointer<Type> native(offset)
+
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
