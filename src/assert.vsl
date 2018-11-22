@@ -1,3 +1,4 @@
+@inline
 private func trap() native(trap);
 
 // The assert function takes a condition in its argument and will error with a
@@ -5,7 +6,6 @@ private func trap() native(trap);
 // immediately without the ability for error handling. Assert is recommended for
 // defensive coding as using this prevents any error handling utilities to be
 // used.
-@inline
 public func assert(condition: Bool, message: String) -> Void {
     if !condition {
         print(message)
