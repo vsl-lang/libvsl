@@ -5,6 +5,8 @@
     public init(count: UInt64) native(allocCount)
 
     public func free() native(free)
+
+    @inline
     public static func sizeof() -> UInt64 native(sizeof)
 }
 
