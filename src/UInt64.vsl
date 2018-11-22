@@ -51,5 +51,9 @@
 
     @backend(llvm)
     @inline(always)
-    public static func ~(expression: UInt64) -> UInt64 native(ineg)
+    public static func ~(expression: UInt64) -> UInt64 native(inot)
+
+    @backend(llvm)
+    @inline(always)
+    public static func -(expression: UInt64) -> UInt64 native(ineg)
 }
