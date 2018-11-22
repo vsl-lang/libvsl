@@ -1,6 +1,4 @@
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
-
-@inline(always)
 private func memcpy(dest: Pointer<UInt8>, source: Pointer<UInt8>, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
 
 // This compiles seamlessly to an internal pointer type. You can use this for
