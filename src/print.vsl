@@ -1,6 +1,6 @@
 // Prints a string to STDOUT with a trailing newline.
 public func print(string: String) {
-    puts(string.underlyingData)
+    puts(ByteSequence::string.underlyingData)
 }
 
 // Prints a null-terminated byte sequence to STDOUT with a trailing newline.
