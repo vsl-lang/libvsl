@@ -63,9 +63,9 @@ public class String {
 
     // Concatenate two strings together.
     public static func +(lhs: String, rhs: String) -> String {
-        let newPtr = Pointer<UInt8>.alloc(count: lhs.byteLength + rhs.byteLength + 1);
+        let newPtr = Pointer<UInt8>.alloc(count: UInt64::(lhs.byteLength + rhs.byteLength + 1));
         newPtr.copy(from: ByteSequence::lhs.underlyingData, length: lhs.byteLength)
-        newPtr.offset(by: lhs.byteLength).copy(from: ByteSequence::rhs.underlyingData, length: rhs.byteLength)
+        newPtr.offset(by: Int64::lhs.byteLength).copy(from: ByteSequence::rhs.underlyingData, length: UInt64::rhs.byteLength)
         return String(value: newPtr, byteLength: lhs.byteLength + rhs.byteLength)
     }
 }
