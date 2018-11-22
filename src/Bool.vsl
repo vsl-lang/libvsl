@@ -18,4 +18,8 @@
     @backend(llvm)
     @inline(always)
     public static func ==(lhs: Bool, rhs: Bool) -> Bool native(ieq)
+
+    @backend(llvm)
+    @inline(always)
+    public static func !(expression: Bool) -> Bool native(not)
 }

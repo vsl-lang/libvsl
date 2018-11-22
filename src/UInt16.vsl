@@ -49,4 +49,7 @@
     @inline(always)
     public static func <(lhs: UInt16, rhs: UInt16) -> Bool native(uilt)
 
+    @backend(llvm)
+    @inline(always)
+    public static func ~(expression: UInt16) -> UInt16 native(ineg)
 }

@@ -49,6 +49,9 @@
     @inline(always)
     public static func <(lhs: UInt32, rhs: UInt32) -> Bool native(uilt)
 
+    @backend(llvm)
+    @inline(always)
+    public static func ~(expression: UInt32) -> UInt32 native(ineg)
 }
 
 public typealias UInt = UInt32

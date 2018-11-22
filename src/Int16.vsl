@@ -49,4 +49,7 @@
     @inline(always)
     public static func <(lhs: Int16, rhs: Int16) -> Bool native(ilt)
 
+    @backend(llvm)
+    @inline(always)
+    public static func ~(expression: Int16) -> Int16 native(ineg)
 }

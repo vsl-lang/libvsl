@@ -51,6 +51,9 @@
     @inline(always)
     public static func <(lhs: Int32, rhs: Int32) -> Bool native(ilt)
 
+    @backend(llvm)
+    @inline(always)
+    public static func ~(expression: Int32) -> Int32 native(ineg)
 }
 
 public typealias Int = Int32
