@@ -1,5 +1,4 @@
-@inline
-private func trap() native(trap);
+private func trap() external("llvm.trap");
 
 // The assert function takes a condition in its argument and will error with a
 // message if the assertion fails and will critically error, exiting the program

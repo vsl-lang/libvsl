@@ -1,23 +1,53 @@
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
 
+@inline(always)
+private func memcpy(dest: Pointer<UInt8>, source: Pointer<UInt8>, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
+
 // This compiles seamlessly to an internal pointer type. You can use this for
 // interaction with C APIs and other ABIs or you can alternatively use the
 // memory allocation initializers and manage your own sections of memory.
 @mock(pointer) public class Pointer<Type> {
     public func free() external(free)
 
+    // Copies memory from source to current pointer with the width of the
+    // current pointer.
+    public func copy(from source: Pointer<Type>) {
+        memcpy(
+            dest: Pointer<UInt8>::self,
+            source: Pointer<UInt8>::source,
+            length: Pointer<Type>.sizeof(),
+            isVolatile: false
+        )
+    }
+
+    // Copies from a byte sequence with a given length
+    public func copy(from byteSequence: ByteSequence, length: UInt64) {
+        memcpy(
+            dest: Pointer<UInt8>::self,
+            source: Pointer<UInt8>::byteSequence,
+            length: length,
+            isVolatile: false
+        )
+    }
+
+    // Dereferences the value the pointer points at
     @inline
     public func dereference() -> Type native(load)
 
+    // Stores a new value where the pointer points at.
     @inline
     public func store(value: Type) -> Void native(store)
 
+    // Offsets a pointer by an amount. This is a signed integer so pass a negative
+    // number to advance in reverse.
     @inline
     public func offset(by: Int64) -> Pointer<Type> native(offset)
 
+    // Returns sizeof passed type
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
+    // Alocates a count instances of a passed type.
     @inline(always)
     public static func alloc(count: UInt64) -> Pointer<Type> {
         return Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
