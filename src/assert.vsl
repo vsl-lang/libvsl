@@ -6,7 +6,7 @@ private func trap() native(trap);
 // defensive coding as using this prevents any error handling utilities to be
 // used.
 @inline
-func assert(condition: Bool, message: String) -> Void {
+public func assert(condition: Bool, message: String) -> Void {
     if !condition {
         print(message)
         trap()
