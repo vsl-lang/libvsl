@@ -1,5 +1,6 @@
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
-private func memcpy(dest: Pointer<UInt8>, source: Pointer<UInt8>, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
+private func memcpy(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
+private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
 
 // This compiles seamlessly to an internal pointer type. You can use this for
 // interaction with C APIs and other ABIs or you can alternatively use the
@@ -41,14 +42,35 @@ private func memcpy(dest: Pointer<UInt8>, source: Pointer<UInt8>, length: UInt64
     @inline
     public func offset(by: Int64) -> Pointer<Type> native(offset)
 
+    // Returns if the current pointer is a null pointer.
+    @inline
+    public func isNullPtr() -> Bool {
+        return UInt64::self == 0
+    }
+
     // Returns sizeof passed type
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
     // Alocates a count instances of a passed type.
-    @inline(always)
+    @inline
     public static func alloc(count: UInt64) -> Pointer<Type> {
-        return Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
+        let newPointer = Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
+        assert(!newPointer.isNullPtr(), "VSL: out of memory")
+        return newPointer
+    }
+
+    // Reallocated the current array and provides a new pointer.
+    @inline
+    public func realloc(count: UInt64) -> Pointer<Type> {
+        let newPtr = Pointer<Type>::realloc(
+            source: OpaquePointer::self,
+            newSize: Pointer<Type>.sizeof() * count
+        );
+
+        assert(!newPtr.isNullPtr(), "VSL: out of memory")
+
+        return newPtr;
     }
 }
 
