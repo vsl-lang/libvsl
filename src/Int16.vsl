@@ -43,6 +43,14 @@
 
     @backend(llvm)
     @inline(always)
+    public static func &(lhs: Int16, rhs: Int16) -> Int16 native(and);
+
+    @backend(llvm)
+    @inline(always)
+    public static func |(lhs: Int16, rhs: Int16) -> Int16 native(or);
+
+    @backend(llvm)
+    @inline(always)
     public static func >(lhs: Int16, rhs: Int16) -> Bool native(igt)
 
     @backend(llvm)

@@ -27,6 +27,14 @@
 
     @backend(llvm)
     @inline(always)
+    public static func &(lhs: UInt16, rhs: UInt16) -> UInt16 native(and);
+
+    @backend(llvm)
+    @inline(always)
+    public static func |(lhs: UInt16, rhs: UInt16) -> UInt16 native(or);
+
+    @backend(llvm)
+    @inline(always)
     public static func ==(lhs: UInt16, rhs: UInt16) -> Bool native(ieq)
 
     @backend(llvm)

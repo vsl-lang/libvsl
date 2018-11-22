@@ -57,6 +57,14 @@
 
     @backend(llvm)
     @inline(always)
+    public static func &(lhs: Int8, rhs: Int8) -> Int8 native(and);
+
+    @backend(llvm)
+    @inline(always)
+    public static func |(lhs: Int8, rhs: Int8) -> Int8 native(or);
+
+    @backend(llvm)
+    @inline(always)
     public static func <<(lhs: Int8, rhs: Int8) -> Int8 native(shl);
 
     @backend(llvm)
