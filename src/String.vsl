@@ -1,4 +1,4 @@
-const STRING_IS_
+const STRING_DEALLOC_OPT_OUT: UInt8 = 1;
 
 // A string represents some section of text. A string can represent a single
 // character or an entire file. That said, it is important to understand when
