@@ -51,6 +51,10 @@
 
     @backend(llvm)
     @inline(always)
+    public static func ^(lhs: Int16, rhs: Int16) -> Int16 native(xor);
+
+    @backend(llvm)
+    @inline(always)
     public static func >(lhs: Int16, rhs: Int16) -> Bool native(igt)
 
     @backend(llvm)

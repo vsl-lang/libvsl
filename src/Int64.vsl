@@ -36,6 +36,10 @@
 
     @backend(llvm)
     @inline(always)
+    public static func ^(lhs: Int64, rhs: Int64) -> Int64 native(xor);
+
+    @backend(llvm)
+    @inline(always)
     public static func ==(lhs: Int64, rhs: Int64) -> Bool native(ieq)
 
     @backend(llvm)
