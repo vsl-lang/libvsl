@@ -22,3 +22,8 @@ target: obj
 # and you usually in 99% of cases want a recursive vsl source path
 sources:
     - src/**/*.vsl
+
+# Specify options for the documentation generator
+docgen:
+    # The theme color for the documentation.
+    themeColor: '#E26350'
