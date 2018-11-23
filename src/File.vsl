@@ -1,0 +1,16 @@
+// @mock(opaquepointer) private class CFile {}
+//
+// func putc(char: Int32, stream: CFile) external(putc)
+//
+// func fdopen(fd: Int32, mode: ByteSequence) -> CFile external(fdopen);
+// func fflush(stream: CFile) -> Void external(fflush);
+//
+// const stdout: CFile = fdopen(fd: 1, mode: `r`)
+//
+// // The file represents a class or any other sort of POSIX-style 'stream'. In VSL
+// // the STDOUT, STDIN, and STDERR streams are also represented as a file.
+// public class File {
+//     private let file: CFile
+//
+//     //
+// }

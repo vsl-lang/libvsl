@@ -1,4 +1,8 @@
+private func puts(string: CString) -> Int32 external(puts)
+
+
 // Prints a string to STDOUT with a trailing newline.
+@inline
 public func print(string: String) {
     puts(ByteSequence::string.underlyingData)
 }

@@ -1,9 +1,0 @@
-@mock(opaquepointer) private class CFile {}
-
-func puts(string: CString) -> Int32 external(puts)
-func putc(char: Int32, stream: CFile) external(putc)
-
-func fdopen(fd: Int32, mode: ByteSequence) -> CFile external(fdopen);
-func fflush(stream: CFile) -> Void external(fflush);
-
-const stdout: CFile = fdopen(fd: 1, mode: `r`)
