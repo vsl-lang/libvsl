@@ -69,7 +69,7 @@ public class String {
         let newPtr = Pointer<UInt8>.alloc(UInt64::newLength)
 
         self.underlyingData
-            .offset(by: normalizedStartIndex)
+            .offset(by: UInt64::normalizedStartIndex)
             .copy(to: newPtr, count: UInt64::newLength)
 
         return String(value: newPtr, byteLength: UInt::newLength)
