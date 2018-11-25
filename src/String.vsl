@@ -54,7 +54,7 @@ public class String {
     // [start, end). Negative parameters refer to the end of the array. This
     // means `-1` will refer to just before the last item.
     public func substring(from startIndex: Int, to endIndex: Int) -> String {
-        if startIndex > self.byteLength {
+        if startIndex > Int::self.byteLength {
             return ""
         }
 
