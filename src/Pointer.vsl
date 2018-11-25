@@ -1,5 +1,6 @@
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
 private func memcpy(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
+private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memmove.p0i8.p0i8.i64");
 private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
 
 // This compiles seamlessly to an internal pointer type. You can use this for
@@ -9,11 +10,24 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
     public func free() external(free)
 
     // Copies memory from source to current pointer with the width of the
-    // current pointer.
-    public func copy(from source: Pointer<Type>) {
+    // current pointer. Count specifies how many instances of `Pointer<Type>`
+    // to copy.
+    public func copy(from source: Pointer<Type>, count: UInt64) {
         memcpy(
-            dest: Pointer<UInt8>::self,
-            source: Pointer<UInt8>::source,
+            dest: OpaquePointer::self,
+            source: OpaquePointer::source,
+            length: Pointer<Type>.sizeof(),
+            isVolatile: false
+        )
+    }
+
+    // Copies memory from current pointer to another pointer with the width of
+    // the current pointer. Count specifies how many instances of `Pointer<Type>`
+    // to copy.
+    public func copy(to destination: Pointer<Type>, count: UInt64) {
+        memcpy(
+            dest: OpaquePointer::destination,
+            source: OpaquePointer::self,
             length: Pointer<Type>.sizeof(),
             isVolatile: false
         )
@@ -22,8 +36,79 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
     // Copies from a byte sequence with a given length
     public func copy(from byteSequence: ByteSequence, length: UInt64) {
         memcpy(
-            dest: Pointer<UInt8>::self,
-            source: Pointer<UInt8>::byteSequence,
+            dest: OpaquePointer::self,
+            source: OpaquePointer::byteSequence,
+            length: length,
+            isVolatile: false
+        )
+    }
+
+    // Copies the given amount of bytes from the current pointer to the provided
+    // `ByteSequence`.
+    public func copy(to byteSequence: ByteSequence, length: UInt64) {
+        memcpy(
+            dest: OpaquePointer::byteSequence,
+            source: OpaquePointer::self,
+            length: length,
+            isVolatile: false
+        )
+    }
+
+
+
+
+    // Moves memory from source to current pointer with the width of the
+    // current pointer. Count specifies how many instances of `Pointer<Type>`
+    // to move.
+    //
+    // The difference between this and the copy functions is that this works
+    // with overlapping memory regions.
+    public func move(from source: Pointer<Type>, count: UInt64) {
+        memmove(
+            dest: OpaquePointer::self,
+            source: OpaquePointer::source,
+            length: Pointer<Type>.sizeof(),
+            isVolatile: false
+        )
+    }
+
+    // Moves memory from current pointer to another pointer with the width of
+    // the current pointer. Count specifies how many instances of `Pointer<Type>`
+    // to move.
+    //
+    // The difference between this and the copy functions is that this works
+    // with overlapping memory regions.
+    public func move(to destination: Pointer<Type>, count: UInt64) {
+        memmove(
+            dest: OpaquePointer::destination,
+            source: OpaquePointer::self,
+            length: Pointer<Type>.sizeof(),
+            isVolatile: false
+        )
+    }
+
+
+    // Moves from a byte sequence with a given length
+    //
+    // The difference between this and the copy functions is that this works
+    // with overlapping memory regions.
+    public func move(from byteSequence: ByteSequence, length: UInt64) {
+        memmove(
+            dest: OpaquePointer::self,
+            source: OpaquePointer::byteSequence,
+            length: length,
+            isVolatile: false
+        )
+    }
+
+    // Moves to a byte sequence with a given length
+    //
+    // The difference between this and the copy functions is that this works
+    // with overlapping memory regions.
+    public func move(to byteSequence: ByteSequence, length: UInt64) {
+        memmove(
+            dest: OpaquePointer::byteSequence,
+            source: OpaquePointer::self,
             length: length,
             isVolatile: false
         )
@@ -60,7 +145,8 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         return newPointer
     }
 
-    // Reallocated the current array and provides a new pointer.
+    // Reallocated the current array and provides a new pointer. This will
+    // automatically free the old pointer.
     @inline
     public func realloc(count: UInt64) -> Pointer<Type> {
         let newPtr = Pointer<Type>::realloc(

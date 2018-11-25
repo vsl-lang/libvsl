@@ -35,12 +35,23 @@ public class Array<Type> {
         self.contentLength += 1
     }
 
+    // Prepends an element to the beginning of the array
+    public func prepend(element: Type) -> Void {
+        if self.contentLength == self.capacity {
+            self.reallocateArray()
+        }
+
+        self.data
+            .move(to: self.data.offset(by: 1), count: self.contentLength)
+
+        self.data.store(value: element)
+        self.contentLength += 1
+    }
+
     // Expand array capacity
     private func reallocateArray() -> Void {
-        let oldDataPtr = self.data
         self.capacity *= 2
         self.data = self.data.realloc(count: UInt64::self.capacity)
-        oldDataPtr.free()
     }
 
     deinit {
