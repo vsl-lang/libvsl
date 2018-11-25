@@ -48,11 +48,11 @@
 
     @backend(llvm)
     @inline(always)
-    public static func >=(lhs: UInt8, rhs: UInt8) -> Bool native(uige)
+    public static func >=(lhs: UInt8, rhs: UInt8) -> Bool native(uigte)
 
     @backend(llvm)
     @inline(always)
-    public static func <=(lhs: UInt8, rhs: UInt8) -> Bool native(uile)
+    public static func <=(lhs: UInt8, rhs: UInt8) -> Bool native(uilte)
 
     @backend(llvm)
     @inline(always)
