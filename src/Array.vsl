@@ -42,7 +42,7 @@ public class Array<Type> {
         }
 
         self.data
-            .move(to: self.data.offset(by: 1), count: self.contentLength)
+            .move(to: self.data.offset(by: 1), count: UInt64::self.contentLength)
 
         self.data.store(value: element)
         self.contentLength += 1
