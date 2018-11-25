@@ -1,0 +1,2 @@
+public func trunc(x: Float) -> Float external("llvm.trunc.f32");
+public func trunc(x: Double) -> Double external("llvm.trunc.f64");

@@ -1,0 +1,2 @@
+public func floor(x: Float) -> Float external("llvm.floor.f32");
+public func floor(x: Double) -> Double external("llvm.floor.f64");

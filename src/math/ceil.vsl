@@ -1,0 +1,2 @@
+public func ceil(x: Float) -> Float external("llvm.ceil.f32");
+public func ceil(x: Double) -> Double external("llvm.ceil.f64");
