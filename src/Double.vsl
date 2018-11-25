@@ -1,4 +1,4 @@
-@primitive(FloatingPoint)
+@primitive(FloatingPoint, _precType)
 @mock(double)
 public class Double {
 
