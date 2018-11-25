@@ -1,0 +1,2 @@
+public func log(a: Float) -> Float external("llvm.log.f32");
+public func log(a: Double) -> Double external("llvm.log.f64");

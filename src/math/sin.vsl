@@ -1,0 +1,2 @@
+public func sin(x: Float) -> Float external("llvm.sin.f32");
+public func sin(x: Double) -> Double external("llvm.sin.f64");

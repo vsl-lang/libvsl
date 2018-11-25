@@ -1,0 +1,8 @@
+public func min(a: UInt8, b: UInt8) -> UInt8 { return a < b ? a : b }
+public func min(a: UInt16, b: UInt16) -> UInt16 { return a < b ? a : b }
+public func min(a: UInt32, b: UInt32) -> UInt32 { return a < b ? a : b }
+public func min(a: UInt64, b: UInt64) -> UInt64 { return a < b ? a : b }
+public func min(a: Int8, b: Int8) -> Int8 { return a < b ? a : b }
+public func min(a: Int16, b: Int16) -> Int16 { return a < b ? a : b }
+public func min(a: Int32, b: Int32) -> Int32 { return a < b ? a : b }
+public func min(a: Int64, b: Int64) -> Int64 { return a < b ? a : b }

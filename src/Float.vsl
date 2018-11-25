@@ -1,4 +1,53 @@
 @primitive(FloatingPoint)
 @mock(float)
 public class Float {
+
+    @backend(llvm)
+    @inline(always)
+    public static func +(lhs: Float, rhs: Float) -> Float native(fadd)
+
+    @backend(llvm)
+    @inline(always)
+    public static func -(lhs: Float, rhs: Float) -> Float native(fsub)
+
+    @backend(llvm)
+    @inline(always)
+    public static func *(lhs: Float, rhs: Float) -> Float native(fmul)
+
+    @backend(llvm)
+    @inline(always)
+    public static func /(lhs: Float, rhs: Float) -> Float native(fdiv)
+
+    @backend(llvm)
+    @inline(always)
+    public static func %(lhs: Float, rhs: Float) -> Float native(frem)
+
+    @backend(llvm)
+    @inline(always)
+    public static func ==(lhs: Float, rhs: Float) -> Bool native(feq)
+
+    @backend(llvm)
+    @inline(always)
+    public static func !=(lhs: Float, rhs: Float) -> Bool native(fneq)
+
+    @backend(llvm)
+    @inline(always)
+    public static func <(lhs: Float, rhs: Float) -> Bool native(flt)
+
+    @backend(llvm)
+    @inline(always)
+    public static func >(lhs: Float, rhs: Float) -> Bool native(fgt)
+
+    @backend(llvm)
+    @inline(always)
+    public static func <=(lhs: Float, rhs: Float) -> Bool native(flte)
+
+    @backend(llvm)
+    @inline(always)
+    public static func >=(lhs: Float, rhs: Float) -> Bool native(fgte)
+
+    @backend(llvm)
+    @inline(always)
+    public static func -(expression: Float) -> Float native(fneg)
+
 }

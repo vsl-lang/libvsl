@@ -1,0 +1,2 @@
+public func cos(x: Float) -> Float external("llvm.cos.f32");
+public func cos(x: Double) -> Double external("llvm.cos.f64");

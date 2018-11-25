@@ -1,4 +1,53 @@
 @primitive(FloatingPoint)
 @mock(double)
 public class Double {
+
+    @backend(llvm)
+    @inline(always)
+    public static func +(lhs: Double, rhs: Double) -> Double native(fadd)
+
+    @backend(llvm)
+    @inline(always)
+    public static func -(lhs: Double, rhs: Double) -> Double native(fsub)
+
+    @backend(llvm)
+    @inline(always)
+    public static func *(lhs: Double, rhs: Double) -> Double native(fmul)
+
+    @backend(llvm)
+    @inline(always)
+    public static func /(lhs: Double, rhs: Double) -> Double native(fdiv)
+
+    @backend(llvm)
+    @inline(always)
+    public static func %(lhs: Double, rhs: Double) -> Double native(frem)
+
+    @backend(llvm)
+    @inline(always)
+    public static func ==(lhs: Double, rhs: Double) -> Bool native(feq)
+
+    @backend(llvm)
+    @inline(always)
+    public static func !=(lhs: Double, rhs: Double) -> Bool native(fneq)
+
+    @backend(llvm)
+    @inline(always)
+    public static func <(lhs: Double, rhs: Double) -> Bool native(flt)
+
+    @backend(llvm)
+    @inline(always)
+    public static func >(lhs: Double, rhs: Double) -> Bool native(fgt)
+
+    @backend(llvm)
+    @inline(always)
+    public static func <=(lhs: Double, rhs: Double) -> Bool native(flte)
+
+    @backend(llvm)
+    @inline(always)
+    public static func >=(lhs: Double, rhs: Double) -> Bool native(fgte)
+
+    @backend(llvm)
+    @inline(always)
+    public static func -(expression: Double) -> Double native(fneg)
+
 }

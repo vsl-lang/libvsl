@@ -1,0 +1,2 @@
+public func tan(x: Float) -> Float { return sin(x) / cos(x) }
+public func tan(x: Double) -> Double { return sin(x) / cos(x) }

@@ -6,7 +6,7 @@ const STRING_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 // a string you would eat ungodly amounts of memory so for this purpose you may
 // want to reference the File class.
 //
-// VSL strings are _immutable_. This means that you can't really 'modify' a
+// VSL strings are **immutable**. This means that you can't really 'modify' a
 // string, you must create a new one. This is automatically done with string
 // methods and operators such as `+`.
 //
@@ -48,6 +48,49 @@ public class String {
     public init(value: Pointer<UInt8>, byteLength: UInt) {
         self.underlyingData = value
         self.byteLength = byteLength
+    }
+
+    // Creates a substring from a string. This slices a string 0-indexed from
+    // [start, end). Negative parameters refer to the end of the array. This
+    // means `-1` will refer to just before the last item.
+    public func substring(from startIndex: Int, to endIndex: Int) -> String {
+        if startIndex > self.byteLength {
+            return ""
+        }
+
+        if startIndex < 0 {
+            startIndex = self.byteLength + startIndex
+        }
+
+        if endIndex < 0 {
+            endIndex = self.byteLength + endIndex
+        }
+
+        if endIndex <= startIndex {
+            return ""
+        }
+
+        let newLength = min(endIndex - startIndex, self.byteLength)
+        let newPtr = Pointer<UInt8>.alloc(UInt64::newLength)
+
+        self.underlyingData
+            .offset(by: startIndex)
+            .copy(to: newPtr, count: UInt64::newLength)
+
+        return String(value: newPtr, byteLength: UInt::newLength)
+    }
+
+    // Substrings from a given point to the end of the string. A negative number
+    // as a parameter is invalid. Use `String.tail` if you wish for that. If a
+    // number zero or less is passed an empty string will be returned.
+    // Alternatively if the given point is past the index at the end of the
+    // string, an empty string will be returned.
+    public func substring(from index: Int) -> String {
+        if index < 0 || index >= self.byteLength {
+            return ""
+        }
+
+        return self.substring(from: index, to: self.byteLength)
     }
 
     // Prevents the backing pointer from being deallocated by VSL.
