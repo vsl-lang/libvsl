@@ -35,11 +35,11 @@
 
     @backend(llvm)
     @inline(always)
-    public static func >=(lhs: Int16, rhs: Int16) -> Bool native(ige)
+    public static func >=(lhs: Int16, rhs: Int16) -> Bool native(igte)
 
     @backend(llvm)
     @inline(always)
-    public static func <=(lhs: Int16, rhs: Int16) -> Bool native(ile)
+    public static func <=(lhs: Int16, rhs: Int16) -> Bool native(ilte)
 
     @backend(llvm)
     @inline(always)
