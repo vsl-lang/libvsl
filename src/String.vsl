@@ -59,11 +59,11 @@ public class String {
         }
 
         if startIndex < 0 {
-            startIndex = self.byteLength + startIndex
+            startIndex = Int::self.byteLength + startIndex
         }
 
         if endIndex < 0 {
-            endIndex = self.byteLength + endIndex
+            endIndex = Int::self.byteLength + endIndex
         }
 
         if endIndex <= startIndex {
