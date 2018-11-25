@@ -58,23 +58,18 @@ public class String {
             return ""
         }
 
-        if startIndex < 0 {
-            startIndex = Int::self.byteLength + startIndex
-        }
+        let normalizedStartIndex = startIndex < 0 ? Int::self.byteLength + startIndex : startIndex
+        let normalizedEndIndex = endIndex < 0 ? Int::self.byteLength + endIndex : endIndex
 
-        if endIndex < 0 {
-            endIndex = Int::self.byteLength + endIndex
-        }
-
-        if endIndex <= startIndex {
+        if normalizedEndIndex <= normalizedStartIndex {
             return ""
         }
 
-        let newLength = min(endIndex - startIndex, self.byteLength)
+        let newLength = min(normalizedEndIndex - normalizedStartIndex, self.byteLength)
         let newPtr = Pointer<UInt8>.alloc(UInt64::newLength)
 
         self.underlyingData
-            .offset(by: startIndex)
+            .offset(by: normalizedStartIndex)
             .copy(to: newPtr, count: UInt64::newLength)
 
         return String(value: newPtr, byteLength: UInt::newLength)
