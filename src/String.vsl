@@ -65,7 +65,7 @@ public class String {
             return ""
         }
 
-        let newLength = min(normalizedEndIndex - normalizedStartIndex, self.byteLength)
+        let newLength = min(normalizedEndIndex - normalizedStartIndex, Int::self.byteLength)
         let newPtr = Pointer<UInt8>.alloc(UInt64::newLength)
 
         self.underlyingData
