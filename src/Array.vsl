@@ -29,7 +29,7 @@ public class Array<Type> {
         }
 
         self.data
-            .offset(by: UInt64::self.contentLength)
+            .offset(by: Int64::self.contentLength)
             .store(value: element)
 
         self.contentLength += 1
