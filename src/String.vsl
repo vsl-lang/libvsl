@@ -81,11 +81,11 @@ public class String {
     // Alternatively if the given point is past the index at the end of the
     // string, an empty string will be returned.
     public func substring(from index: Int) -> String {
-        if index < 0 || index >= self.byteLength {
+        if index < 0 || index >= Int::self.byteLength {
             return ""
         }
 
-        return self.substring(from: index, to: self.byteLength)
+        return self.substring(from: index, to: Int::self.byteLength)
     }
 
     // Prevents the backing pointer from being deallocated by VSL.
