@@ -7,6 +7,8 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
 // interaction with C APIs and other ABIs or you can alternatively use the
 // memory allocation initializers and manage your own sections of memory.
 @mock(pointer) public class Pointer<Type> {
+    static let null: Pointer<Type> = Pointer<Type>::0
+
     public func free() external(free)
 
     // Copies memory from source to current pointer with the width of the
