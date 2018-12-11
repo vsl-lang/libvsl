@@ -1,6 +1,7 @@
 const ARRAY_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 
 // The array class represents a dynamically-scaled mutable list of items.
+@dynamic(false)
 public class Array<Type> {
 
     // Array options
@@ -15,14 +16,14 @@ public class Array<Type> {
     // Pointer to  the data
     private let data: Pointer<Type>
 
-    // Create an empty array with a given internal capacity. You can use
+    /// Create an empty array with a given internal capacity. You can use
     public init(initialCapacity: UInt) {
         self.capacity = initialCapacity
         self.contentLength = 0
         self.data = Pointer<Type>.alloc(count: UInt64::initialCapacity)
     }
 
-    // Appends an element to the end of the array
+    /// Appends an element to the end of the array
     public func append(element: Type) -> Void {
         if self.contentLength == self.capacity {
             self.reallocateArray()
@@ -35,7 +36,7 @@ public class Array<Type> {
         self.contentLength += 1
     }
 
-    // Prepends an element to the beginning of the array
+    /// Prepends an element to the beginning of the array
     public func prepend(element: Type) -> Void {
         if self.contentLength == self.capacity {
             self.reallocateArray()
@@ -47,6 +48,8 @@ public class Array<Type> {
         self.data.store(value: element)
         self.contentLength += 1
     }
+
+    ///
 
     // Expand array capacity
     private func reallocateArray() -> Void {

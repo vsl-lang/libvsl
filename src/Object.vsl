@@ -1,0 +1,20 @@
+/// The Object class is the semantic root of all OO-hierarchies in VSL. While
+/// internally nothing actually inherits object. What the `Object` class allows
+/// is for all objects to cast _to_ it. What this means is that the `Object`
+/// class will store type metadata for whatever it is cast to. This means the
+/// Object class is slow but it also offers the opportunity for runtime
+/// reflection. Please reference the [Reflect] class for more information on
+/// that.
+///
+/// Beyond reflection, the [Object] class doesn't have many uses. Reflection is
+/// not considered good practice except for debugging and is very slow.
+///
+/// The [Object] class is internally implemented as a 'wrapper' with type
+/// metadata. The [Reflect] class is the only class assumed to have knowledge of
+/// the internal structure which is assumed to be not well-known as it may
+/// change from release to release.
+///
+/// In terms of this physical declaration, it does not refer to Object itself;
+/// this will be overriden by the internal object class but it specifies that the
+/// root class would be defined in this scope with this name.
+@manifestAsRoot public class Object {}

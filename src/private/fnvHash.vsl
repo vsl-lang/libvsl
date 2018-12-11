@@ -1,0 +1,18 @@
+// /// Hashes a byte sequence of specified length and returns a integer.
+// func fnvHash(byteSequence: ByteSequence, length: UInt64) -> UInt64 {
+//
+//     let hash: UInt64 = fnvConstantPair64.offsetBasis
+//     let startingPointer = Pointer<UInt8>::byteSequence
+//
+//     while (length -= 1) >= 0 {
+//         startingPointer = startingPointer.offset(by: 1)
+//         hash ^= startingPointer.dereference()
+//         hash *= fnvConstantPair64.prime
+//     }
+//
+// }
+//
+// private typealias FNVConstantPair = (offsetBasis: UInt64, prime: UInt64)
+//
+// // These are special values which are used in FNV algorithm
+// private const fnvConstantPair64: FNVConstantPair = (offsetBasis: 14695981039346656037, prime: 1099511628211)

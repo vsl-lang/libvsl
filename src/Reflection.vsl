@@ -1,0 +1,43 @@
+// These classes mock the internal RTTI structures that are generated so they
+// can be idomatically referenced
+
+@dynamic(false)
+private class InternalRTTI {
+    const typeString: CString = CString::OpaquePointer.null
+}
+
+@dynamic(false)
+private class InternalObject {
+    const rtti: InternalRTTI = InternalRTTI::OpaquePointer.null
+}
+
+/// The [Reflection] class offers runtime 'reflection'. What this means is you
+/// can inspect the types of objects at runtime using this class. Additionally
+/// you can also identify the fields of those types.
+///
+/// That said, runtime reflection is _very_ slow and is not recommended. Usage
+/// can significantly slow down the VSL instance. This is because Reflection
+/// interferes with the native low-overhead of VSL and requires all interaction
+/// to go through a slow runtime-implemented polymorphism algorithms.
+///
+/// The reflect offers runtime reflection by taking advantage of VSL polymorphic
+/// RTTI. Please note that Reflection has a **very** high runtime cost and
+/// should pretty much only be used for debugging.
+public class Reflection {
+
+    private let reflectee: InternalObject
+
+    /// Creates a [Reflection] instance for the passed object by analyzing its
+    /// RTTI. This will store an instance of [Object] for as long as this class
+    /// lives so really it is very bad idea to also pass Reflection structures
+    /// around.
+    public init(of object: Object) {
+        self.reflectee = InternalObject::object
+    }
+
+    /// This returns a human-readable string of the most specialized type that
+    /// the internal object was have.
+    func getTypeName() -> String {
+        return self.reflectee.rtti.typeString
+    }
+}

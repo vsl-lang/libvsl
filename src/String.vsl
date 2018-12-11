@@ -1,5 +1,7 @@
 const STRING_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 
+private func strlen(string: Pointer<UInt8>) -> UInt external(strlen);
+
 // A string represents some section of text. A string can represent a single
 // character or an entire file. That said, it is important to understand when
 // to use strings compared to other types. If you were to read a large file into
@@ -50,6 +52,18 @@ public class String {
         self.byteLength = byteLength
     }
 
+    // Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    // result this class WILL take control of the management for the data. To
+    // prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    // can be done using the [String#deallocOptOut()] function.
+    //
+    // This will calculate the string length of `value` until the first
+    // null-byte encountered.
+    public init(value: Pointer<UInt8>) {
+        self.underlyingData = value
+        self.byteLength = strlen(string: value)
+    }
+
     // Creates a substring from a string. This slices a string 0-indexed from
     // [start, end). Negative parameters refer to the end of the array. This
     // means `-1` will refer to just before the last item.
@@ -88,7 +102,19 @@ public class String {
         return self.substring(from: index, to: Int::self.byteLength)
     }
 
-    // Prevents the backing pointer from being deallocated by VSL.
+    /// Obtains the first n characters from a string. This is identical to
+    /// calling [String#substring(from:to:)] with `from: 0`.
+    public func head(to index: Int) -> String {
+        return self.substring(from: 0, to: index)
+    }
+
+    /// Obtains the last n characters from a string.
+    public func tail(to index: Int) -> String {
+        return self.substring(from: -index, to: Int::self.byteLength)
+    }
+
+    /// Prevents the backing pointer from being deallocated by VSL. Use this if
+    /// you get the value from an external source
     public func deallocOptOut() {
         self.options |= STRING_DEALLOC_OPT_OUT;
     }
