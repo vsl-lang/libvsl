@@ -3,17 +3,17 @@ private func memcpy(dest: OpaquePointer, source: OpaquePointer, length: UInt64, 
 private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memmove.p0i8.p0i8.i64");
 private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
 
-// This compiles seamlessly to an internal pointer type. You can use this for
-// interaction with C APIs and other ABIs or you can alternatively use the
-// memory allocation initializers and manage your own sections of memory.
+/// This compiles seamlessly to an internal pointer type. You can use this for
+/// interaction with C APIs and other ABIs or you can alternatively use the
+/// memory allocation initializers and manage your own sections of memory.
 @mock(pointer) public class Pointer<Type> {
     static let null: Pointer<Type> = Pointer<Type>::0
 
     public func free() external(free)
 
-    // Copies memory from source to current pointer with the width of the
-    // current pointer. Count specifies how many instances of `Pointer<Type>`
-    // to copy.
+    /// Copies memory from source to current pointer with the width of the
+    /// current pointer. Count specifies how many instances of `Pointer<Type>`
+    /// to copy.
     public func copy(from source: Pointer<Type>, count: UInt64 = 1) {
         memcpy(
             dest: OpaquePointer::self,
@@ -23,9 +23,9 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Copies memory from current pointer to another pointer with the width of
-    // the current pointer. Count specifies how many instances of `Pointer<Type>`
-    // to copy.
+    /// Copies memory from current pointer to another pointer with the width of
+    /// the current pointer. Count specifies how many instances of `Pointer<Type>`
+    /// to copy.
     public func copy(to destination: Pointer<Type>, count: UInt64 = 1) {
         memcpy(
             dest: OpaquePointer::destination,
@@ -35,7 +35,7 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Copies from a byte sequence with a given length
+    /// Copies from a byte sequence with a given length
     public func copy(from byteSequence: ByteSequence, length: UInt64) {
         memcpy(
             dest: OpaquePointer::self,
@@ -45,8 +45,8 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Copies the given amount of bytes from the current pointer to the provided
-    // `ByteSequence`.
+    /// Copies the given amount of bytes from the current pointer to the provided
+    /// `ByteSequence`.
     public func copy(to byteSequence: ByteSequence, length: UInt64) {
         memcpy(
             dest: OpaquePointer::byteSequence,
@@ -59,12 +59,12 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
 
 
 
-    // Moves memory from source to current pointer with the width of the
-    // current pointer. Count specifies how many instances of `Pointer<Type>`
-    // to move.
-    //
-    // The difference between this and the copy functions is that this works
-    // with overlapping memory regions.
+    /// Moves memory from source to current pointer with the width of the
+    /// current pointer. Count specifies how many instances of `Pointer<Type>`
+    /// to move.
+    ///
+    /// The difference between this and the copy functions is that this works
+    /// with overlapping memory regions.
     public func move(from source: Pointer<Type>, count: UInt64 = 1) {
         memmove(
             dest: OpaquePointer::self,
@@ -74,12 +74,12 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Moves memory from current pointer to another pointer with the width of
-    // the current pointer. Count specifies how many instances of `Pointer<Type>`
-    // to move.
-    //
-    // The difference between this and the copy functions is that this works
-    // with overlapping memory regions.
+    /// Moves memory from current pointer to another pointer with the width of
+    /// the current pointer. Count specifies how many instances of `Pointer<Type>`
+    /// to move.
+    ///
+    /// The difference between this and the copy functions is that this works
+    /// with overlapping memory regions.
     public func move(to destination: Pointer<Type>, count: UInt64 = 1) {
         memmove(
             dest: OpaquePointer::destination,
@@ -90,10 +90,10 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
     }
 
 
-    // Moves from a byte sequence with a given length
-    //
-    // The difference between this and the copy functions is that this works
-    // with overlapping memory regions.
+    /// Moves from a byte sequence with a given length
+    ///
+    /// The difference between this and the copy functions is that this works
+    /// with overlapping memory regions.
     public func move(from byteSequence: ByteSequence, length: UInt64) {
         memmove(
             dest: OpaquePointer::self,
@@ -103,10 +103,10 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Moves to a byte sequence with a given length
-    //
-    // The difference between this and the copy functions is that this works
-    // with overlapping memory regions.
+    /// Moves to a byte sequence with a given length
+    ///
+    /// The difference between this and the copy functions is that this works
+    /// with overlapping memory regions.
     public func move(to byteSequence: ByteSequence, length: UInt64) {
         memmove(
             dest: OpaquePointer::byteSequence,
@@ -116,30 +116,30 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         )
     }
 
-    // Dereferences the value the pointer points at
+    /// Dereferences the value the pointer points at
     @inline
     public func dereference() -> Type native(load)
 
-    // Stores a new value where the pointer points at.
+    /// Stores a new value where the pointer points at.
     @inline
     public func store(value: Type) -> Void native(store)
 
-    // Offsets a pointer by an amount. This is a signed integer so pass a negative
-    // number to advance in reverse.
+    /// Offsets a pointer by an amount. This is a signed integer so pass a negative
+    /// number to advance in reverse.
     @inline
     public func offset(by: Int64) -> Pointer<Type> native(offset)
 
-    // Returns if the current pointer is a null pointer.
+    /// Returns if the current pointer is a null pointer.
     @inline
     public func isNullPtr() -> Bool {
         return UInt64::self == 0
     }
 
-    // Returns sizeof passed type
+    /// Returns sizeof passed type
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
-    // Alocates a count instances of a passed type.
+    /// Alocates a count instances of a passed type.
     @inline
     public static func alloc(count: UInt64) -> Pointer<Type> {
         let newPointer = Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
@@ -147,8 +147,8 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
         return newPointer
     }
 
-    // Reallocated the current array and provides a new pointer. This will
-    // automatically free the old pointer.
+    /// Reallocated the current array and provides a new pointer. This will
+    /// automatically free the old pointer.
     @inline
     public func realloc(count: UInt64) -> Pointer<Type> {
         let newPtr = Pointer<Type>::realloc(
@@ -162,23 +162,23 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
     }
 }
 
-// This represents a byte sequence. Internally, this is equivilent and
-// interchangable with `Pointer<UInt8>` however the difference is that the
+/// This represents a byte sequence. Internally, this is equivilent and
+/// interchangable with `Pointer<UInt8>` however the difference is that the
 // byte sequence literal can only be a ByteSequence, not a pointer.
-//
-// ByteSequences do not have as many methods as Pointer<T>s however they can be
-// created at compile-time and therefor directly inserted in binary. For this
-// reason, if casted to a Pointer, it is an unsafe operation to call
-// Pointer#free()
-//
-// ByteSequences are used to represent immutable C-strings. If you see a
-// value using `const char*` it is better to use a ByteSequence as you cannot
-// perform any actions with side-effects with a byte sequence.
+///
+/// ByteSequences do not have as many methods as Pointer<T>s however they can be
+/// created at compile-time and therefor directly inserted in binary. For this
+/// reason, if casted to a Pointer, it is an unsafe operation to call
+/// Pointer#free()
+///
+/// ByteSequences are used to represent immutable C-strings. If you see a
+/// value using `const char*` it is better to use a ByteSequence as you cannot
+/// perform any actions with side-effects with a byte sequence.
 @mock(pointer8) @primitive(ByteSequence, _precType) public class ByteSequence {}
 
-// A CString can be used to interact with `char*` from C APIs or ABIs. It is
-// aliased to a ByteSequence however it is recommended to treat any CString as
-// an immutable value.
+/// A CString can be used to interact with `char*` from C APIs or ABIs. It is
+/// aliased to a ByteSequence however it is recommended to treat any CString as
+/// an immutable value.
 public typealias CString = ByteSequence
 
 // An OpaquePointer represents a pointer to any pointer, comparable to `void*`

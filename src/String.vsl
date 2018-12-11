@@ -52,6 +52,39 @@ public class String {
         self.byteLength = byteLength
     }
 
+    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    /// result this class WILL take control of the management for the data. To
+    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    /// can be done using the [String#deallocOptOut()] function.
+    ///
+    /// This will calculate the string length of `value` until the first
+    /// null-byte encountered.
+    public init(value: Pointer<UInt8>) {
+        self.underlyingData = value
+        self.byteLength = strlen(string: value)
+    }
+
+    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    /// result this class WILL take control of the management for the data. To
+    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    /// can be done using the [String#deallocOptOut] function.
+    public init(value: ByteSequence, byteLength: UInt) {
+        self.underlyingData = Pointer<UInt8>::value
+        self.byteLength = byteLength
+    }
+
+    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    /// result this class WILL take control of the management for the data. To
+    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    /// can be done using the [String#deallocOptOut()] function.
+    ///
+    /// This will calculate the string length of `value` until the first
+    /// null-byte encountered.
+    public init(value: ByteSequence) {
+        self.underlyingData = Pointer<UInt8>::value
+        self.byteLength = strlen(string: Pointer<UInt8>::value)
+    }
+
     /// Creates from a pointer that is not allocated by VSL. This is the same
     /// as the other initializers except it already sets the
     /// STRING_DEALLOC_OPT_OUT bit.
@@ -71,16 +104,23 @@ public class String {
         self.byteLength = strlen(string: value)
     }
 
-    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
-    /// result this class WILL take control of the management for the data. To
-    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
-    /// can be done using the [String#deallocOptOut()] function.
-    ///
-    /// This will calculate the string length of `value` until the first
-    /// null-byte encountered.
-    public init(value: Pointer<UInt8>) {
-        self.underlyingData = value
-        self.byteLength = strlen(string: value)
+    /// Creates from a pointer that is not allocated by VSL. This is the same
+    /// as the other initializers except it already sets the
+    /// STRING_DEALLOC_OPT_OUT bit.
+    public init(externalValue value: ByteSequence, byteLength: UInt) {
+        self.options |= STRING_DEALLOC_OPT_OUT;
+        self.underlyingData = Pointer<UInt8>::value
+        self.byteLength = byteLength
+    }
+
+    /// Creates from a pointer that is not allocated by VSL. This is the same
+    /// as the other initializers except it already sets the
+    /// STRING_DEALLOC_OPT_OUT bit. This also automatically calculates the string
+    /// length using the `strlen` function,
+    public init(externalValue value: ByteSequence) {
+        self.options |= STRING_DEALLOC_OPT_OUT;
+        self.underlyingData = Pointer<UInt8>::value
+        self.byteLength = strlen(string: Pointer<UInt8>::value)
     }
 
     /// Creates a substring from a string. This slices a string 0-indexed from
