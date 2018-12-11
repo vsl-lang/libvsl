@@ -2,8 +2,16 @@
 // can be idomatically referenced
 
 @dynamic(false)
+private class InternalFieldRTTI {
+    const fieldName: CString = CString::OpaquePointer.null
+    const fieldOffset: UInt64 = 0
+}
+
+@dynamic(false)
 private class InternalRTTI {
     const typeString: CString = CString::OpaquePointer.null
+    const fieldCount: UInt32 = 0
+    const fieldRTTI: InternalFieldRTTI = InternalFieldRTTI::OpaquePointer.null
 }
 
 @dynamic(false)
