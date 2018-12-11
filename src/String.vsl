@@ -43,30 +43,49 @@ public class String {
     private const byteLength: UInt
     const underlyingData: Pointer<UInt8>
 
-    // Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
-    // result this class WILL take control of the management for the data. To
-    // prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
-    // can be done using the [String#deallocOptOut] function.
+    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    /// result this class WILL take control of the management for the data. To
+    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    /// can be done using the [String#deallocOptOut] function.
     public init(value: Pointer<UInt8>, byteLength: UInt) {
         self.underlyingData = value
         self.byteLength = byteLength
     }
 
-    // Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
-    // result this class WILL take control of the management for the data. To
-    // prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
-    // can be done using the [String#deallocOptOut()] function.
-    //
-    // This will calculate the string length of `value` until the first
-    // null-byte encountered.
+    /// Creates from a pointer that is not allocated by VSL. This is the same
+    /// as the other initializers except it already sets the
+    /// STRING_DEALLOC_OPT_OUT bit.
+    public init(externalValue value: Pointer<UInt8>, byteLength: UInt) {
+        self.options |= STRING_DEALLOC_OPT_OUT;
+        self.underlyingData = value
+        self.byteLength = byteLength
+    }
+
+    /// Creates from a pointer that is not allocated by VSL. This is the same
+    /// as the other initializers except it already sets the
+    /// STRING_DEALLOC_OPT_OUT bit. This also automatically calculates the string
+    /// length using the `strlen` function,
+    public init(externalValue value: Pointer<UInt8>) {
+        self.options |= STRING_DEALLOC_OPT_OUT;
+        self.underlyingData = value
+        self.byteLength = strlen(string: value)
+    }
+
+    /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
+    /// result this class WILL take control of the management for the data. To
+    /// prevent this you will need to set the STRING_DEALLOC_OPT_OUT bit which
+    /// can be done using the [String#deallocOptOut()] function.
+    ///
+    /// This will calculate the string length of `value` until the first
+    /// null-byte encountered.
     public init(value: Pointer<UInt8>) {
         self.underlyingData = value
         self.byteLength = strlen(string: value)
     }
 
-    // Creates a substring from a string. This slices a string 0-indexed from
-    // [start, end). Negative parameters refer to the end of the array. This
-    // means `-1` will refer to just before the last item.
+    /// Creates a substring from a string. This slices a string 0-indexed from
+    /// [start, end). Negative parameters refer to the end of the array. This
+    /// means `-1` will refer to just before the last item.
     public func substring(from startIndex: Int, to endIndex: Int) -> String {
         if startIndex > Int::self.byteLength {
             return ""
@@ -89,11 +108,11 @@ public class String {
         return String(value: newPtr, byteLength: UInt::newLength)
     }
 
-    // Substrings from a given point to the end of the string. A negative number
-    // as a parameter is invalid. Use `String.tail` if you wish for that. If a
-    // number zero or less is passed an empty string will be returned.
-    // Alternatively if the given point is past the index at the end of the
-    // string, an empty string will be returned.
+    /// Substrings from a given point to the end of the string. A negative number
+    /// as a parameter is invalid. Use `String.tail` if you wish for that. If a
+    /// number zero or less is passed an empty string will be returned.
+    /// Alternatively if the given point is past the index at the end of the
+    /// string, an empty string will be returned.
     public func substring(from index: Int) -> String {
         if index < 0 || index >= Int::self.byteLength {
             return ""

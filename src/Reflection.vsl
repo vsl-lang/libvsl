@@ -38,6 +38,6 @@ public class Reflection {
     /// This returns a human-readable string of the most specialized type that
     /// the internal object was have.
     func getTypeName() -> String {
-        return self.reflectee.rtti.typeString
+        return String(externalValue: self.reflectee.rtti.typeString)
     }
 }
