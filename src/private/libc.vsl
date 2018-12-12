@@ -3,7 +3,7 @@ private func open(pathname: ByteSequence, flags: CIOFlags) -> CFileDescriptor ex
 private func read(fd: CFileDescriptor, data: Pointer<UInt8>, count: UInt64) -> Int64 external("read");
 
 public enum CIOFlags {
-case readonly
-case writeonly
+case readOnly
+case writeOnly
 case readWrite
 }

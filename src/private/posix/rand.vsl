@@ -1,4 +1,4 @@
-private lazy const devRandom = open(pathname: `/dev/urandom`, flags: CIOFlags.readonly)
+private lazy const devRandom = open(pathname: `/dev/urandom`, flags: CIOFlags.readOnly)
 func getRandomInt() -> UInt64 {
     // Use 4 UInt8s to get uint64
     const chunk = Pointer<UInt8>.alloc(count: 4)
