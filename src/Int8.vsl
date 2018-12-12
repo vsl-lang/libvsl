@@ -131,7 +131,7 @@
     /// Generates random number in range [from, to)
     public static func random(from start: Int8, to end: Int8) -> Int8 {
         assert(end > start, "Random end must be greater than start")
-        return Int8::getRandomInt() % (end - start) + start
+        return Int8::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
     }
     /// Smallest possible
     public static const minValue: Int8 = 1 << 7

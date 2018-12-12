@@ -116,7 +116,7 @@
     /// Generates random number in range [from, to)
     public static func random(from start: UInt16, to end: UInt16) -> UInt16 {
         assert(end > start, "Random end must be greater than start")
-        return (UInt16::getRandomInt()) % (end - start) + start
+        return UInt16::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
     }
 
     /// Smallest possible

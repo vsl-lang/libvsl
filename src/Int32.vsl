@@ -127,7 +127,7 @@
     /// Generates random number in range [from, to)
     public static func random(from start: Int32, to end: Int32) -> Int32 {
         assert(end > start, "Random end must be greater than start")
-        return Int32::getRandomInt() % (end - start) + start
+        return Int32::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
     }
 
     /// Smallest possible
