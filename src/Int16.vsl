@@ -88,7 +88,7 @@
 
         const isNegative = self < 0
         const absoluteValue = UInt16::abs(self)
-        const length = UInt64::floor(log(Float::absoluteValue)/log(Float::base)) + 1 + UInt64::isNegative
+        const length = UInt64::floor(log(Float::absoluteValue)/log(Float::base)) + 1 + (isNegative ? 1 : 0)
 
         const stringBytes = Pointer<UInt8>.alloc(count: length + 1)
         let stringPos = stringBytes.offset(by: Int64::length - 1)
