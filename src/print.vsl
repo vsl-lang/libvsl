@@ -25,42 +25,42 @@ public func print(bool: Bool) {
 
 // Prints an unsigned 8-bit integer.
 public func print(integer: UInt8) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints a signed 8-bit integer.
 public func print(integer: Int8) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints an unsigned 16-bit integer.
 public func print(integer: UInt16) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints a signed 16-bit integer.
 public func print(integer: Int16) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints an unsigned 32-bit integer.
 public func print(integer: UInt32) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints a signed 32-bit integer.
 public func print(integer: Int32) {
-    puts(integer.toString(base: 10))
+    print(integer.toString(base: 10))
 }
 
 // Prints an unsigned 64-bit integer.
 public func print(integer: UInt64) {
-    puts((UInt32::integer).toString(base: 10))
+    print((UInt32::integer).toString(base: 10))
 }
 
 // Prints a signed 64-bit integer.
 public func print(integer: Int64) {
-    puts((UInt32::integer).toString(base: 10))
+    print((UInt32::integer).toString(base: 10))
 }
 
 // Prints a floating point value
