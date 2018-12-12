@@ -90,4 +90,10 @@ public class Int64 {
         assert(end > start, "Random end must be greater than start")
         return Int64::getRandomInt() % (end - start) + start
     }
+
+    /// Smallest possible
+    public static const minValue: Int64 = 1 << 63
+
+    /// Largest possible
+    public static const maxValue: Int64 = ~(1 << 63)
 }

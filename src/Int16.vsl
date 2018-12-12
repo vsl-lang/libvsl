@@ -127,4 +127,10 @@
         assert(end > start, "Random end must be greater than start")
         return Int16::getRandomInt() % (end - start) + start
     }
+
+    /// Smallest possible
+    public static const minValue: Int16 = 1 << 15
+
+    /// Largest possible
+    public static const maxValue: Int16 = ~(1 << 15)
 }

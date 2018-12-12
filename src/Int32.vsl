@@ -129,6 +129,12 @@
         assert(end > start, "Random end must be greater than start")
         return Int32::getRandomInt() % (end - start) + start
     }
+
+    /// Smallest possible
+    public static const minValue: Int32 = 1 << 31
+
+    /// Largest possible
+    public static const maxValue: Int32 = ~(1 << 31)
 }
 
 public typealias Int = Int32

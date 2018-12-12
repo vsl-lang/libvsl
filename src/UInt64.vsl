@@ -86,4 +86,10 @@
         assert(end > start, "Random end must be greater than start")
         return getRandomInt() % (end - start) + start
     }
+
+    /// Smallest possible
+    public static const minValue: UInt64 = 0
+
+    /// Largest possible
+    public static const maxValue: UInt64 = ~0
 }

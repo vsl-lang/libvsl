@@ -118,6 +118,12 @@
         assert(end > start, "Random end must be greater than start")
         return (UInt32::getRandomInt()) % (end - start) + start
     }
+
+    /// Smallest possible
+    public static const minValue: UInt32 = 0
+
+    /// Largest possible
+    public static const maxValue: UInt32 = ~0
 }
 
 public typealias UInt = UInt32

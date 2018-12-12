@@ -133,4 +133,9 @@
         assert(end > start, "Random end must be greater than start")
         return Int8::getRandomInt() % (end - start) + start
     }
+    /// Smallest possible
+    public static const minValue: Int8 = 1 << 7
+
+    /// Largest possible
+    public static const maxValue: Int8 = ~(1 << 7)
 }
