@@ -124,6 +124,7 @@
 
     /// Generates random number in range [from, to)
     public static func random(from start: Int16, to end: Int16) -> Int16 {
-        return Int16::(getRandomInt() % (end - start) + start)
+        assert(end > start, "Random end must be greater than start")
+        return Int16::getRandomInt() % (end - start) + start
     }
 }

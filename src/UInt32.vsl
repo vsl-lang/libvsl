@@ -115,6 +115,7 @@
 
     /// Generates random number in range [from, to)
     public static func random(from start: UInt32, to end: UInt32) -> UInt32 {
+        assert(end > start, "Random end must be greater than start")
         return (UInt32::getRandomInt()) % (end - start) + start
     }
 }

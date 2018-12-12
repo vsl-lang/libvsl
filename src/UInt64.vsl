@@ -83,6 +83,7 @@
 
     /// Generates random number in range [from, to)
     public static func random(from start: UInt64, to end: UInt64) -> UInt64 {
+        assert(end > start, "Random end must be greater than start")
         return getRandomInt() % (end - start) + start
     }
 }

@@ -87,6 +87,7 @@ public class Int64 {
 
     /// Generates random number in range [from, to)
     public static func random(from start: Int64, to end: Int64) -> Int64 {
-        return Int64::(getRandomInt() % (end - start) + start)
+        assert(end > start, "Random end must be greater than start")
+        return Int64::getRandomInt() % (end - start) + start
     }
 }
