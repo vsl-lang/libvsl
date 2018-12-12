@@ -1,0 +1,35 @@
+// VSL currently uses an implementation of xoroshiro128+ 1.0 which is basically
+// the C -> VSL version of this:
+// http://vigna.di.unimi.it/xorshift/xoroshiro128plus.c
+
+// These numbers are parameters for the PRNG which are random I think? Maybe
+// not see the link above
+private const randParameterA: UInt64 = 24
+private const randParameterB: UInt64 = 16
+private const randParameterC: UInt64 = 37
+
+// If you are a loser on a < 32-bit system and so this function causes segfault
+// leave an issue and I'll try to fix it but you fix yourself too why tf are you
+// using 16-bit what is this 1968.
+private func clock() -> UInt32 external(clock);
+private func time() -> UInt64 external(time);
+
+private func rotl(x: UInt64, k: UInt64) -> UInt64 {
+    return (x << k) | (x >> (64 - k));
+}
+
+// These are seed
+private lazy let randS1: UInt64 = UInt64::clock()
+private lazy let randS2: UInt64 = time()
+
+private func next() -> UInt64 {
+    let s1 = randS1;
+    let s2 = randS2;
+    const result = randS1 + randS2
+
+    s2 ^= s1;
+    randS1 = rotl(s1, randParameterA) ^ s2 ^ (s2 << randParameterB);
+    randS2 = rotl(s2, randParameterC);
+
+    return result
+}

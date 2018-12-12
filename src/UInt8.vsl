@@ -81,4 +81,35 @@
     @backend(llvm)
     @inline(always)
     public static func -(expression: UInt8) -> UInt8 native(ineg)
+
+    func toString(base: Int = 10) -> String {
+        assert(base > 0, "UInt8#toString(base:): base must be positive")
+        assert(base <= 26, "UInt8#toString(base:): base must be at most 26")
+
+        let length: UInt64 = UInt64::floor(log(Float::self)/log(Float::base)) + 1
+
+        const stringBytes = Pointer<UInt8>.alloc(count: length + 1)
+        let stringPos = stringBytes.offset(by: Int64::length - 1)
+
+        let n: UInt8 = self
+
+        do {
+            let digit = n % UInt8::base
+
+            if digit < 0x0A {
+                // 48 is char code for '0'
+                stringPos.store(value: 48 + UInt8::digit)
+            } else {
+                // 65 is char code for 'A'
+                stringPos.store(value: 65 + UInt8::digit - 0x0A)
+            }
+
+            stringPos = stringPos.offset(by: -1)
+        } while (n \= UInt8::base) != 0
+
+        // Store suffix null byte
+        stringBytes.offset(by: Int64::length).store(value: 0)
+
+        return String(value: stringBytes, byteLength: UInt::length)
+    }
 }

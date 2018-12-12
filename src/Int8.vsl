@@ -87,4 +87,44 @@
     @inline(always)
     public static func -(expression: Int8) -> Int8 native(ineg)
 
+    /// Converts to a string
+    func toString(base: Int = 10) -> String {
+        assert(base > 0, "Int16#toString(base:): base must be positive")
+        assert(base <= 26, "Int16#toString(base:): base must be at most 26")
+
+        const isNegative = self < 0
+        const absoluteValue = UInt8::abs(self)
+        const length = UInt64::floor(log(Float::absoluteValue)/log(Float::base)) + 1 + UInt64::isNegative
+
+        const stringBytes = Pointer<UInt8>.alloc(count: length + 1)
+        let stringPos = stringBytes.offset(by: Int64::length - 1)
+
+        // This branch
+        let n = absoluteValue
+
+        do {
+            let digit = n % UInt8::base
+
+            if digit < 0x0A {
+                // 48 is char code for '0'
+                stringPos.store(value: 48 + UInt8::digit)
+            } else {
+                // 65 is char code for 'A'
+                stringPos.store(value: 65 + UInt8::digit - 0x0A)
+            }
+
+            stringPos = stringPos.offset(by: -1)
+        } while (n \= UInt8::base) != 0
+
+        // If number was negative all along add negative
+        if isNegative {
+            // 45 is char code for '-'
+            stringPos.store(value: 45)
+        }
+
+        // Store suffix null byte
+        stringBytes.offset(by: Int64::length).store(value: 0)
+
+        return String(value: stringBytes, byteLength: UInt::length)
+    }
 }

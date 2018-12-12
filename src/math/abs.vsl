@@ -1,7 +1,7 @@
-public func abs(x: Int8) -> Int8 { return x < 0 ? -x : x }
-public func abs(x: Int16) -> Int16 { return x < 0 ? -x : x }
-public func abs(x: Int32) -> Int32 { return x < 0 ? -x : x }
-public func abs(x: Int64) -> Int64 { return x < 0 ? -x : x }
+@inline public func abs(x: Int8) -> Int8 { return x < 0 ? -x : x }
+@inline public func abs(x: Int16) -> Int16 { return x < 0 ? -x : x }
+@inline public func abs(x: Int32) -> Int32 { return x < 0 ? -x : x }
+@inline public func abs(x: Int64) -> Int64 { return x < 0 ? -x : x }
 
 public func abs(x: Float) -> Float external("llvm.fabs.f32");
 public func abs(x: Double) -> Double external("llvm.fabs.f64");
