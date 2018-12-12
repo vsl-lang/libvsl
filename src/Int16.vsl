@@ -121,4 +121,9 @@
 
         return String(value: stringBytes, byteLength: UInt::length)
     }
+
+    /// Generates random number in range [from, to)
+    public static func random(from start: Int16, to end: Int16) -> Int16 {
+        return Int16::(getRandomInt() % (end - start) + start)
+    }
 }

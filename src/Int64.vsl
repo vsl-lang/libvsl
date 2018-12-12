@@ -84,4 +84,9 @@ public class Int64 {
     @backend(llvm)
     @inline(always)
     public static func -(expression: Int64) -> Int64 native(ineg)
+
+    /// Generates random number in range [from, to)
+    public static func random(from start: Int64, to end: Int64) -> Int64 {
+        return Int64::(getRandomInt() % (end - start) + start)
+    }
 }

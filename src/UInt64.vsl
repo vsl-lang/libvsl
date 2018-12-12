@@ -80,4 +80,9 @@
     @backend(llvm)
     @inline(always)
     public static func -(expression: UInt64) -> UInt64 native(ineg)
+
+    /// Generates random number in range [from, to)
+    public static func random(from start: UInt64, to end: UInt64) -> UInt64 {
+        return getRandomInt() % (end - start) + start
+    }
 }

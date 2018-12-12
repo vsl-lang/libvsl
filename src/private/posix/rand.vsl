@@ -1,0 +1,10 @@
+private lazy const devRandom = open(pathname: `/dev/urandom`, flags: CIOFlags.readonly)
+func getRandomInt() -> UInt64 {
+    // Use 4 UInt8s to get uint64
+    const chunk = Pointer<UInt8>.alloc(count: 4)
+    const bytesRead = read(fd: devRandom, data: chunk: count: 4)
+    assert(bytesRead != -1, "failed to obtain random number")
+    const value = (Pointer<UInt64>::chunk).dereference()
+    chunk.free()
+    return value
+}
