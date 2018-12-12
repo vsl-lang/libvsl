@@ -86,6 +86,8 @@
         assert(base > 0, "UInt32#toString(base:): base must be positive")
         assert(base <= 26, "UInt32#toString(base:): base must be at most 26")
 
+        if self == 0 { return "0" }
+
         let length: UInt64 = UInt64::floor(log(Double::self)/log(Double::base)) + 1
 
         const stringBytes = Pointer<UInt8>.alloc(count: length + 1)

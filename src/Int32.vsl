@@ -88,6 +88,8 @@
         assert(base > 0, "Int32#toString(base:): base must be positive")
         assert(base <= 26, "Int32#toString(base:): base must be at most 26")
 
+        if self == 0 { return "0" }
+
         const isNegative = self < 0
         const absoluteValue = UInt32::abs(self)
         const length = UInt64::floor(log(Double::absoluteValue)/log(Double::base)) + 1 + (isNegative ? 1 : 0)
