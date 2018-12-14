@@ -72,3 +72,8 @@ public func print(float: Float) {
 public func print(double: Double) {
     puts(`<<Double>>`)
 }
+
+// Prints an upcast object
+public func print(value: Object) {
+    print("<#{} at 0x#{}>")
+}

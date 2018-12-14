@@ -23,6 +23,14 @@ target: obj
 sources:
     - src/**/*.vsl
 
+# C libraries to link with
+linker:
+    libraries:
+        # libc
+        - c
+        # libm
+        - m
+
 # Specify options for the documentation generator
 docgen:
     # The theme color for the documentation.

@@ -49,12 +49,18 @@ public class Array<Type> {
         self.contentLength += 1
     }
 
-    ///
-
     // Expand array capacity
     private func reallocateArray() -> Void {
         self.capacity *= 2
-        self.data = self.data.realloc(count: UInt64::self.capacity)
+
+        // If ARRAY_DEALLOC_OPT_OUT is true then we will have to create a new
+        // pointer
+        if self.options & ARRAY_DEALLOC_OPT_OUT != 0 {
+            self.data = Pointer<Type>.alloc(count: UInt64::self.capacity)
+            self.options ^= ARRAY_DEALLOC_OPT_OUT;
+        } else {
+            self.data = self.data.realloc(count: UInt64::self.capacity)
+        }
     }
 
     deinit {
