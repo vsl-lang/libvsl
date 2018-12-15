@@ -24,7 +24,7 @@
     public static func !(expression: Bool) -> Bool native(inot)
 
     /// Generates random boolean
-    public static func random() -> Boolean {
+    public static func random() -> Bool {
         return Bool::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
     }
 }
