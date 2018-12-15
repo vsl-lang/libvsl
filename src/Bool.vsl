@@ -25,6 +25,6 @@
 
     /// Generates random boolean
     public static func random() -> Bool {
-        return Bool::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
+        return Bool::getRandomInt()
     }
 }
