@@ -1,6 +1,7 @@
 const STRING_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 
 private func strlen(string: Pointer<UInt8>) -> UInt external(strlen);
+private func memcmp(stringA: Pointer<UInt8>, stringB: Pointer<UInt8>, length: UInt64) -> UInt external(memcmp);
 
 // A string represents some section of text. A string can represent a single
 // character or an entire file. That said, it is important to understand when
@@ -40,7 +41,13 @@ public class String {
     // if you change these then you won't get a sane string.
 
     private const options: UInt8 = 0
+
+    // The internal byteLength is always one byte shorter than the underlyingData
+    // as it does not include the terminating null byte
     private const byteLength: UInt
+
+    // The underlyingData is expected to be immutable and ends in a null byte.
+    // That said it may contain a null byte in the actual string itself.
     const underlyingData: Pointer<UInt8>
 
     /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
@@ -172,6 +179,13 @@ public class String {
         return self.substring(from: -index, to: Int::self.byteLength)
     }
 
+    /// Searches current string for the index of a substring. This returns -1
+    /// if the index was not found.
+    // public func findIndex(of substring: String) -> Int {
+    //     // The substring can't be bigger than this string and have it exist.
+    //     if substring.byteLength > self.byteLength { return -1 }
+    // }
+
     /// Prevents the backing pointer from being deallocated by VSL. Use this if
     /// you get the value from an external source
     public func deallocOptOut() {
@@ -184,7 +198,13 @@ public class String {
         }
     }
 
-    // Concatenate two strings together.
+    /// Check if two string are exactly equal
+    public static func ==(lhs: String, rhs: String) -> Bool {
+        if lhs.byteLength != rhs.byteLength { return false }
+        return memcmp(lhs.underlyingData, rhs.underlyingData, UInt64::lhs.byteLength) == 0
+    }
+
+    /// Concatenate two strings together.
     public static func +(lhs: String, rhs: String) -> String {
         let newLength: UInt = lhs.byteLength + rhs.byteLength
 
