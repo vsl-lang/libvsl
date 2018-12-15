@@ -1,6 +1,8 @@
 // Represents a 64-bit unsigned integer.
 @primitive(Integer) @mock(ui64) public class UInt64 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: UInt64, rhs: UInt64) -> UInt64 native(iadd)

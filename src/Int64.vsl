@@ -5,6 +5,8 @@
 @staticEnumProvider
 public class Int64 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Int64, rhs: Int64) -> Int64 native(iadd)

@@ -2,6 +2,8 @@
 // 'byte' type in terms of the amount of memory it refers to.
 @primitive(Integer) @mock(ui8) public class UInt8 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: UInt8, rhs: UInt8) -> UInt8 native(iadd)

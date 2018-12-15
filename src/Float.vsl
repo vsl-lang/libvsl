@@ -2,6 +2,8 @@
 @mock(float)
 public class Float {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Float, rhs: Float) -> Float native(fadd)

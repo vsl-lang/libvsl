@@ -2,4 +2,6 @@
 // expression library. Regular expressions are compiled at program startup.
 @primitive(Regex, _precType)
 @mock(pointer8)
-public class Regex {}
+public class Regex {
+    private init() {}
+}

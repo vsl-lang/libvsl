@@ -3,6 +3,8 @@
 // C APIs.
 @primitive(Integer, _precType) @mock(i32) public class Int32 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Int32, rhs: Int32) -> Int32 native(iadd)

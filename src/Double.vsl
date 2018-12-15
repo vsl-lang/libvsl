@@ -2,6 +2,8 @@
 @mock(double)
 public class Double {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Double, rhs: Double) -> Double native(fadd)

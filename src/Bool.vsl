@@ -15,6 +15,9 @@
 @primitive(Boolean)
 @booleanProvider
 @mock(i1) public class Bool {
+
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func ==(lhs: Bool, rhs: Bool) -> Bool native(ieq)

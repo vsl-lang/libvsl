@@ -1,6 +1,8 @@
 // Represents a 16-bit signed integer.
 @primitive(Integer) @mock(i16) public class Int16 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Int16, rhs: Int16) -> Int16 native(iadd)

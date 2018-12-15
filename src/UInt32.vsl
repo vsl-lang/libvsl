@@ -1,6 +1,8 @@
 // Represents a 32-bit unsigned integer.
 @primitive(Integer) @mock(ui32) public class UInt32 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: UInt32, rhs: UInt32) -> UInt32 native(iadd)

@@ -1,6 +1,8 @@
 // Represents a 16-bit unsigned integer.
 @primitive(Integer) @mock(ui16) public class UInt16 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: UInt16, rhs: UInt16) -> UInt16 native(iadd)

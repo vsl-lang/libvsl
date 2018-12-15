@@ -9,6 +9,8 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
 @mock(pointer) public class Pointer<Type> {
     static let null: Pointer<Type> = Pointer<Type>::0
 
+    private init() {}
+
     public func free() external(free)
 
     /// Copies memory from source to current pointer with the width of the

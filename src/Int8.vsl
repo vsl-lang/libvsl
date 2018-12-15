@@ -7,6 +7,8 @@
 // potential unsafe loss of precision.
 @primitive(Integer) @mock(i8) public class Int8 {
 
+    private init() {}
+
     @backend(llvm)
     @inline(always)
     public static func +(lhs: Int8, rhs: Int8) -> Int8 native(iadd)
