@@ -22,4 +22,9 @@
     @backend(llvm)
     @inline(always)
     public static func !(expression: Bool) -> Bool native(inot)
+
+    /// Generates random boolean
+    public static func random() -> Boolean {
+        return Bool::(getRandomInt() % (UInt64::end - UInt64::start) + UInt64::start)
+    }
 }
