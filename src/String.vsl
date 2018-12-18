@@ -204,10 +204,16 @@ public class String {
         return memcmp(lhs.underlyingData, rhs.underlyingData, UInt64::lhs.byteLength) == 0
     }
 
+    // Allocation states:
+    // @parameter(0, contained)
+    // @parameter(1, contained)
+    // @alloc(unmanaged)
     /// Concatenate two strings together.
     public static func +(lhs: String, rhs: String) -> String {
         let newLength: UInt = lhs.byteLength + rhs.byteLength
 
+        // Allocation states:
+        // @alloc(unmanaged)
         let newPtr = Pointer<UInt8>.alloc(count: UInt64::(newLength + 1));
 
         // Copy the current string to a new location
@@ -222,6 +228,9 @@ public class String {
             .offset(by: Int64::newLength)
             .store(value: 0)
 
-        return String(value: newPtr, byteLength: lhs.byteLength + rhs.byteLength)
+        // Allocation states:
+        // @alloc(unmanaged)
+        let newString = String(value: newPtr, byteLength: lhs.byteLength + rhs.byteLength)
+        return newString
     }
 }
