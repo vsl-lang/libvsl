@@ -19,7 +19,7 @@ public class Array<Type> {
 
     /// Gets the length of the array
     public let length: Int {
-        return Int::contentLength
+        return Int::self.contentLength
     }
 
     /// Create an empty array with a given internal capacity. You can use
