@@ -55,13 +55,13 @@ public class String {
     /// Getting this is still always an O(1) operation as the character tally
     /// is still always tracked.
     public let length: Int {
-        return Int::byteLength
+        return Int::self.byteLength
     }
 
     /// Returns the amount of bytes in the byte representation of the string.
     /// See also [String#toBytes()]
     public let byteLength: Int {
-        return Int::internalLength
+        return Int::self.internalLength
     }
 
     /// Returns the string as a byte pointer. This creates a copy that must be
