@@ -2,7 +2,7 @@ const ARRAY_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 
 // The array class represents a dynamically-scaled mutable list of items.
 @dynamic(false)
-@arrayProvider
+@primitive(List)
 public class Array<Type> {
 
     // Array options
