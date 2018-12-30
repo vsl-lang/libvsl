@@ -55,7 +55,7 @@ public class String {
     /// Getting this is still always an O(1) operation as the character tally
     /// is still always tracked.
     public let length: Int {
-        return Int::self.byteLength
+        return Int::self.internalLength
     }
 
     /// Returns the amount of bytes in the byte representation of the string.
@@ -68,8 +68,8 @@ public class String {
     /// manually [Pointer#free]'d. This will have null-byte at the end and will
     /// be of length [String#byteLength]
     public func toBytes() -> Pointer<UInt8> {
-        const newPtr = Pointer<UInt8>.alloc(count: UInt64::self.byteLength)
-        self.underlyingData.copy(to: newPtr, count: UInt64::self.byteLength + 1)
+        const newPtr = Pointer<UInt8>.alloc(count: UInt64::self.internalLength)
+        self.underlyingData.copy(to: newPtr, count: UInt64::self.internalLength + 1)
         return newPtr
     }
 
@@ -233,19 +233,19 @@ public class String {
     // @alloc(unmanaged)
     /// Concatenate two strings together.
     public static func +(lhs: String, rhs: String) -> String {
-        let newLength: UInt = lhs.byteLength + rhs.byteLength
+        let newLength: UInt = lhs.internalLength + rhs.internalLength
 
         // Allocation states:
         // @alloc(unmanaged)
         let newPtr = Pointer<UInt8>.alloc(count: UInt64::(newLength + 1));
 
         // Copy the current string to a new location
-        newPtr.copy(from: ByteSequence::lhs.underlyingData, length: UInt64::lhs.byteLength)
+        newPtr.copy(from: ByteSequence::lhs.underlyingData, length: UInt64::lhs.internalLength)
 
         // Copy the second string
         newPtr
-            .offset(by: Int64::lhs.byteLength)
-            .copy(from: ByteSequence::rhs.underlyingData, length: UInt64::rhs.byteLength)
+            .offset(by: Int64::lhs.internalLength)
+            .copy(from: ByteSequence::rhs.underlyingData, length: UInt64::rhs.internalLength)
 
         newPtr
             .offset(by: Int64::newLength)
@@ -253,7 +253,7 @@ public class String {
 
         // Allocation states:
         // @alloc(unmanaged)
-        let newString = String(value: newPtr, byteLength: lhs.byteLength + rhs.byteLength)
+        let newString = String(value: newPtr, byteLength: lhs.internalLength + rhs.internalLength)
         return newString
     }
 }
