@@ -1,0 +1,2 @@
+@optionalProvider
+public class Optional<Type> {}

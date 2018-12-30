@@ -22,7 +22,7 @@ private func memcmp(stringA: Pointer<UInt8>, stringB: Pointer<UInt8>, length: UI
 //
 // Internally strings are represented as their length and their value as a null-
 // terminated UInt8 array. You can access these underlying methods using
-// self.underlyingData and self.byteLength however this is reccomended against
+// self.underlyingData and self.internalLength however this is reccomended against
 // as in other implementations for other platforms these may not be available.
 // Additionally use caution when using these, modifying any of these values can
 // result in segfaults. If you are passing the underlyingData to a function
@@ -44,11 +44,34 @@ public class String {
 
     // The internal byteLength is always one byte shorter than the underlyingData
     // as it does not include the terminating null byte
-    private const byteLength: UInt
+    private const internalLength: UInt
 
     // The underlyingData is expected to be immutable and ends in a null byte.
     // That said it may contain a null byte in the actual string itself.
     const underlyingData: Pointer<UInt8>
+
+    /// Returns the amount of characters in the string. This will be the same as
+    /// [String#byteLength] _unless_ the unicode flag of the string is enabled.
+    /// Getting this is still always an O(1) operation as the character tally
+    /// is still always tracked.
+    public let length: Int {
+        return Int::byteLength
+    }
+
+    /// Returns the amount of bytes in the byte representation of the string.
+    /// See also [String#toBytes()]
+    public let byteLength: Int {
+        return Int::internalLength
+    }
+
+    /// Returns the string as a byte pointer. This creates a copy that must be
+    /// manually [Pointer#free]'d. This will have null-byte at the end and will
+    /// be of length [String#byteLength]
+    public func toBytes() -> Pointer<UInt8> {
+        const newPtr = Pointer<UInt8>.alloc(count: UInt64::self.byteLength)
+        self.underlyingData.copy(to: newPtr, count: UInt64::self.byteLength + 1)
+        return newPtr
+    }
 
     /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
     /// result this class WILL take control of the management for the data. To
@@ -56,7 +79,7 @@ public class String {
     /// can be done using the [String#deallocOptOut] function.
     public init(value: Pointer<UInt8>, byteLength: UInt) {
         self.underlyingData = value
-        self.byteLength = byteLength
+        self.internalLength = byteLength
     }
 
     /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
@@ -68,7 +91,7 @@ public class String {
     /// null-byte encountered.
     public init(value: Pointer<UInt8>) {
         self.underlyingData = value
-        self.byteLength = strlen(string: value)
+        self.internalLength = strlen(string: value)
     }
 
     /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
@@ -77,7 +100,7 @@ public class String {
     /// can be done using the [String#deallocOptOut] function.
     public init(value: ByteSequence, byteLength: UInt) {
         self.underlyingData = Pointer<UInt8>::value
-        self.byteLength = byteLength
+        self.internalLength = byteLength
     }
 
     /// Using this intializer REQUIRES a Pointer that is allocated by VSL. As a
@@ -89,7 +112,7 @@ public class String {
     /// null-byte encountered.
     public init(value: ByteSequence) {
         self.underlyingData = Pointer<UInt8>::value
-        self.byteLength = strlen(string: Pointer<UInt8>::value)
+        self.internalLength = strlen(string: Pointer<UInt8>::value)
     }
 
     /// Creates from a pointer that is not allocated by VSL. This is the same
@@ -98,7 +121,7 @@ public class String {
     public init(externalValue value: Pointer<UInt8>, byteLength: UInt) {
         self.options |= STRING_DEALLOC_OPT_OUT;
         self.underlyingData = value
-        self.byteLength = byteLength
+        self.internalLength = byteLength
     }
 
     /// Creates from a pointer that is not allocated by VSL. This is the same
@@ -108,7 +131,7 @@ public class String {
     public init(externalValue value: Pointer<UInt8>) {
         self.options |= STRING_DEALLOC_OPT_OUT;
         self.underlyingData = value
-        self.byteLength = strlen(string: value)
+        self.internalLength = strlen(string: value)
     }
 
     /// Creates from a pointer that is not allocated by VSL. This is the same
@@ -117,7 +140,7 @@ public class String {
     public init(externalValue value: ByteSequence, byteLength: UInt) {
         self.options |= STRING_DEALLOC_OPT_OUT;
         self.underlyingData = Pointer<UInt8>::value
-        self.byteLength = byteLength
+        self.internalLength = byteLength
     }
 
     /// Creates from a pointer that is not allocated by VSL. This is the same
@@ -127,25 +150,25 @@ public class String {
     public init(externalValue value: ByteSequence) {
         self.options |= STRING_DEALLOC_OPT_OUT;
         self.underlyingData = Pointer<UInt8>::value
-        self.byteLength = strlen(string: Pointer<UInt8>::value)
+        self.internalLength = strlen(string: Pointer<UInt8>::value)
     }
 
     /// Creates a substring from a string. This slices a string 0-indexed from
     /// [start, end). Negative parameters refer to the end of the array. This
     /// means `-1` will refer to just before the last item.
     public func substring(from startIndex: Int, to endIndex: Int) -> String {
-        if startIndex > Int::self.byteLength {
+        if startIndex > Int::self.internalLength {
             return ""
         }
 
-        let normalizedStartIndex = startIndex < 0 ? Int::self.byteLength + startIndex : startIndex
-        let normalizedEndIndex = endIndex < 0 ? Int::self.byteLength + endIndex : endIndex
+        let normalizedStartIndex = startIndex < 0 ? Int::self.internalLength + startIndex : startIndex
+        let normalizedEndIndex = endIndex < 0 ? Int::self.internalLength + endIndex : endIndex
 
         if normalizedEndIndex <= normalizedStartIndex {
             return ""
         }
 
-        let newLength = min(normalizedEndIndex - normalizedStartIndex, Int::self.byteLength)
+        let newLength = min(normalizedEndIndex - normalizedStartIndex, Int::self.internalLength)
         let newPtr = Pointer<UInt8>.alloc(UInt64::newLength)
 
         self.underlyingData
@@ -161,11 +184,11 @@ public class String {
     /// Alternatively if the given point is past the index at the end of the
     /// string, an empty string will be returned.
     public func substring(from index: Int) -> String {
-        if index < 0 || index >= Int::self.byteLength {
+        if index < 0 || index >= Int::self.internalLength {
             return ""
         }
 
-        return self.substring(from: index, to: Int::self.byteLength)
+        return self.substring(from: index, to: Int::self.internalLength)
     }
 
     /// Obtains the first n characters from a string. This is identical to
@@ -176,14 +199,14 @@ public class String {
 
     /// Obtains the last n characters from a string.
     public func tail(to index: Int) -> String {
-        return self.substring(from: -index, to: Int::self.byteLength)
+        return self.substring(from: -index, to: Int::self.internalLength)
     }
 
     /// Searches current string for the index of a substring. This returns -1
     /// if the index was not found.
     // public func findIndex(of substring: String) -> Int {
     //     // The substring can't be bigger than this string and have it exist.
-    //     if substring.byteLength > self.byteLength { return -1 }
+    //     if substring.byteLength > self.internalLength { return -1 }
     // }
 
     /// Prevents the backing pointer from being deallocated by VSL. Use this if

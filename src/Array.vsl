@@ -2,6 +2,7 @@ const ARRAY_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 
 // The array class represents a dynamically-scaled mutable list of items.
 @dynamic(false)
+@arrayProvider
 public class Array<Type> {
 
     // Array options
@@ -16,11 +17,27 @@ public class Array<Type> {
     // Pointer to  the data
     private let data: Pointer<Type>
 
+    /// Gets the length of the array
+    public let length: Int {
+        return Int::contentLength
+    }
+
     /// Create an empty array with a given internal capacity. You can use
     public init(initialCapacity: UInt) {
         self.capacity = initialCapacity
         self.contentLength = 0
         self.data = Pointer<Type>.alloc(count: UInt64::initialCapacity)
+    }
+
+    /// Create an array from a C-style array/pointer with a given length, if
+    /// the length of pointer is invalid behavior is undefined. Deallocation is
+    /// opted out by default with this.
+    public init(cArray: Pointer<Type>, length: UInt) {
+        self.capacity = length
+        self.contentLength = length
+        self.data = cArray
+
+        self.options |= ARRAY_DEALLOC_OPT_OUT
     }
 
     /// Appends an element to the end of the array
