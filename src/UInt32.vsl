@@ -73,7 +73,7 @@
 
     @backend(llvm)
     @inline(always)
-    public static func >>>(lhs: UInt32, rhs: UInt32) -> Int8 native(lshr);
+    public static func >>>(lhs: UInt32, rhs: UInt32) -> UInt32 native(lshr);
 
     @backend(llvm)
     @inline(always)

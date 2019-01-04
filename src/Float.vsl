@@ -52,4 +52,17 @@ public class Float {
     @inline(always)
     public static func -(expression: Float) -> Float native(fneg)
 
+    /// Converts to a string
+    func toString(base: Int = 10) -> String {
+        const bits = UInt32::self
+        const exponent = (bits >>> 23) & 0xFF
+        const fraction = bits & (0xFFFFFF >>> 1)
+        const isNegative = Bool::((bits & (1 << 31)) >>> 31)
+
+        if isNegative {
+            return "-"
+        } else {
+            return "+"
+        }
+    }
 }
