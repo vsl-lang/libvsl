@@ -52,17 +52,35 @@ public class Float {
     @inline(always)
     public static func -(expression: Float) -> Float native(fneg)
 
-    /// Converts to a string
-    func toString(base: Int = 10) -> String {
-        const bits = UInt32::self
-        const exponent = (bits >>> 23) & 0xFF
-        const fraction = bits & (0xFFFFFF >>> 1)
-        const isNegative = Bool::((bits & (1 << 31)) >>> 31)
 
-        if isNegative {
-            return "-"
-        } else {
-            return "+"
-        }
+
+    @inline(always)
+    private static func isNaN(a: Float, b: Float) -> Bool native(isnan)
+
+    // Converts the float to a UInt32 with the bits of the float preserved
+    // exactly. To perform a FP cast use the bitcast operator.
+    @inline
+    public func reinterpretAsInt() -> UInt32 {
+        const ptr = Pointer<Float>.alloc(count: 1)
+        ptr.store(value: self)
+        const value = (Pointer<UInt32>::ptr).dereference()
+        ptr.free()
+        return value
     }
+
+    /// Specifies if the current float is a NaN value
+    public let isNaN: Bool {
+        return Float.isNaN(a: self, b: self)
+    }
+
+    /// Returns the value for a 'NaN' value (specifically a QNaN). You cannot
+    /// compare to this, instead use 'isNaN' to check for a NaN value.
+    public static const NaN: Float = 0.0 / 0.0
+
+    /// Returns the value for positive infinity
+    public static const infinity: Float = 1.0 / 0.0
+
+    /// Returns the value for negative infinity
+    public static const negativeInfinity: Float = -1.0 / 0.0
+
 }

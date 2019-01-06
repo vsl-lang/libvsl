@@ -52,4 +52,35 @@ public class Double {
     @inline(always)
     public static func -(expression: Double) -> Double native(fneg)
 
+
+
+    @inline(always)
+    private static func isNaN(a: Double, b: Double) -> Bool native(isnan)
+
+    // Converts the float to a UInt64 with the bits of the float preserved
+    // exactly. To perform a FP cast use the bitcast operator.
+    @inline
+    public func reinterpretAsInt() -> UInt64 {
+        const ptr = Pointer<Double>.alloc(count: 1)
+        ptr.store(value: self)
+        const value = (Pointer<UInt64>::ptr).dereference()
+        ptr.free()
+        return value
+    }
+
+    /// Specifies if the current float is a NaN value
+    public let isNaN: Bool {
+        return Double.isNaN(a: self, b: self)
+    }
+
+    /// Returns the value for a 'NaN' value (specifically a QNaN). You cannot
+    /// compare to this, instead use 'isNaN' to check for a NaN value.
+    public static const NaN: Double = 0.0 / 0.0
+
+    /// Returns the value for positive infinity
+    public static const infinity: Double = 1.0 / 0.0
+
+    /// Returns the value for negative infinity
+    public static const negativeInfinity: Double = -1.0 / 0.0
+
 }
