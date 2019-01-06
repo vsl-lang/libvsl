@@ -73,6 +73,11 @@ public class Float {
         return Float.isNaN(a: self, b: self)
     }
 
+    /// Specifies if the current float is positive _or negative infinity_.
+    public let isInfinity: Bool {
+        return self == Float.infinity || self == Float.negativeInfinity
+    }
+
     /// Returns the value for a 'NaN' value (specifically a QNaN). You cannot
     /// compare to this, instead use 'isNaN' to check for a NaN value.
     public static const NaN: Float = 0.0 / 0.0
