@@ -1,1 +1,6 @@
-func getRandomInt() -> UInt64 external(secureRandom);
+private func getRandomInt32() -> UInt32 external(secureRandom);
+
+func getRandomInt() -> UInt64 {
+    // Combine two 32-bit integers
+    return (UInt64::getRandomInt32 << 32) | UInt64::getRandomInt32()
+}
