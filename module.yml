@@ -21,7 +21,21 @@ target: obj
 # One-depth wildcard can be used but this also serves as an example module.ymlPath
 # and you usually in 99% of cases want a recursive vsl source path
 sources:
-    - src/**/*.vsl
+    - src/*.vsl
+    - src/!(private)/**/*.vsl
+    - path: src/private/win32/**/*.vsl
+      filters:
+        - os: win32
+    - path: src/private/wasm/**/*.vsl
+      filters:
+        - arch: wasm
+    - path: src/private/libc/**/*.vsl
+      filters:
+        - not.arch: wasm
+    - path: src/private/posix/**/*.vsl
+      filters:
+        - not.arch: wasm
+          not.os: win32
 
 # C libraries to link with
 linker:

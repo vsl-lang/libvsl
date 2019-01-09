@@ -1,0 +1,3 @@
+private func alloc(size: UInt64) -> OpaquePointer external(malloc);
+private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
+private func free(pointer: OpaquePointer) -> Void external(free);

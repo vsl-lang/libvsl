@@ -1,7 +1,8 @@
 private func alloc(size: UInt64) -> OpaquePointer external(malloc);
+private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
+private func free(pointer: OpaquePointer) -> Void external(free);
 private func memcpy(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
 private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memmove.p0i8.p0i8.i64");
-private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
 
 /// This compiles seamlessly to an internal pointer type. You can use this for
 /// interaction with C APIs and other ABIs or you can alternatively use the
@@ -14,7 +15,9 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer ex
     /// Frees the currently allocated segment of memory. Pointer is useless
     /// after calling this. This is not automatically called so it is
     /// recommended to place this in your class's deinit section.
-    public func free() external(free)
+    public func free() {
+      free(pointer: OpaquePointer::self)
+    }
 
     /// Copies memory from source to current pointer with the width of the
     /// current pointer. Count specifies how many instances of `Pointer<Type>`

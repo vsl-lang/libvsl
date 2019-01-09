@@ -1,0 +1,14 @@
+private const heapBase: UInt64 external(__heap_base);
+
+// Allocations for WebAssembly
+private func alloc(size: UInt64) -> OpaquePointer {
+    return OpaquePointer::0
+}
+
+private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
+    return OpaquePointer::0
+}
+
+private func free(pointer: OpaquePointer) -> Void {
+
+}
