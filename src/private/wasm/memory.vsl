@@ -60,6 +60,11 @@ private class WASMBlock {
         return !(Pointer<WASMBlock>::self.nextBlock).isNullPtr()
     }
 
+    // Returns if has next block
+    let hasPreviousBlock: Bool {
+        return !(Pointer<WASMBlock>::self.previousBlock).isNullPtr()
+    }
+
     // Gets the would-be pointer of the adjacent block
     let nextAdjacentBlock: WASMBlock {
         return WASMBlock::self.data.offset(by: Int64::self.size)
@@ -287,11 +292,11 @@ private func free(pointer: OpaquePointer) -> Void {
     const existingBlock = WASMBlock::blockPointer
 
     existingBlock.isFree = 0
-    if existingBlock.nextBlock && existingBlock.nextBlock.isFree {
+    if existingBlock.hasNextBlock && existingBlock.nextBlock.isFree {
         mergeBlock(existingBlock, withBlock: existingBlock.nextBlock)
     }
 
-    if existingBlock.previousBlock && existingBlock.previousBlock.isFree {
+    if existingBlock.hasPreviousBlock && existingBlock.previousBlock.isFree {
         mergeBlock(existingBlock.previousBlock, withBlock: existingBlock)
     }
 }
