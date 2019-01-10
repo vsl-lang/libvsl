@@ -291,7 +291,7 @@ private func free(pointer: OpaquePointer) -> Void {
     const blockPointer = (Pointer<WASMBlock>::pointer).offset(by: -1)
     const existingBlock = WASMBlock::blockPointer
 
-    existingBlock.isFree = 0
+    existingBlock.isFree = 1
     if existingBlock.hasNextBlock && existingBlock.nextBlock.isFree != 0 {
         mergeBlock(existingBlock, withBlock: existingBlock.nextBlock)
     }
