@@ -264,7 +264,7 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
     }
 
     // If the adjacent block is free and can contain then use that
-    if existingBlock.hasNextBlock && existingBlock.nextBlock.isFree && existingBlock.nextBlock.size + existingBlock.size >= newSize {
+    if existingBlock.hasNextBlock && existingBlock.nextBlock.isFree != 0 && existingBlock.nextBlock.size + existingBlock.size >= newSize {
         mergeBlock(existingBlock, withBlock: existingBlock.nextBlock)
         splitBlock(existingBlock, withSize: newSize)
         return source
