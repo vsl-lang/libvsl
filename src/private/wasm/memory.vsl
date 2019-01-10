@@ -1,13 +1,242 @@
-private const heapBase: UInt64 external(__heap_base);
+private func memoryGrow(memIndex: UInt32, by size: UInt32) -> Int32 external("llvm.wasm.memory.grow.i32");
+private func memorySize(memIndex: UInt32) -> UInt32 external("llvm.wasm.memory.size.i32");
+
+// VSL WASM heap allocation implementation
+// This uses a first fit technique by designing the heap
+// as a linked list. This rather aggressively merges blocks
+// and is kind of similar to dlalloc
+
+// WASM Page size as designated in spec (64 Ki)
+// WebAssembly Core Specification § 4.2.8
+private const WASM_PAGE_SIZE: UInt64 = 64 << 10
+
+// Default block size (a given memory 'item').
+private const initialBlockSize: UInt64 = 1 << 8
+
+// Minimum extra size required before a given block will be split
+private const splitPressure: UInt64 = 1 << 4
+
+// Cannot be larger than a signed 64 bit integer
+private const MAXIMUM_BLOCK_SIZE: UInt64 = UInt64::Int64.maxValue
+
+// Safe memory grow
+private func safeMemoryGrow(by size: UInt32) {
+    const oldSize = memoryGrow(memIndex: 0, by: size)
+    assert(oldSize != -1, "VSL: out of memory (page)")
+}
+
+// Safe get memory size in BYTES
+private func safeMemorySize() -> UInt64 {
+    return UInt64::memorySize(memIndex: 0) * WASM_PAGE_SIZE
+}
+
+// Abstractly represents a block, this is overlayed on top of memory. Can't
+// actually construct this because that would mean dynamic memory.
+@dynamic(false)
+private class WASMBlock {
+    // The size of the current block
+    let size: UInt64 = 0
+
+    // Next block pointer
+    let nextBlock: WASMBlock = WASMBlock::0
+
+    // Previous block pointer
+    let previousBlock: WASMBlock = WASMBlock::0
+
+    // Specifies if the block is free. LLVM will align(4) but using UInt32 will
+    // explicitly indicate 4-width alignment.
+    let isFree: UInt32 = 0
+
+    // Start of block data
+    let data: Pointer<UInt8> {
+        return Pointer<UInt8>::(Pointer<WASMBlock>::self).offset(by: 1)
+    }
+
+    // Gets the would-be pointer of the adjacent block
+    let nextAdjacentBlock: WASMBlock {
+        return WASMBlock::self.data.offset(by: Int64::self.size)
+    }
+}
+
+private func debugInspect(x: UInt32) external("debug.inspect");
+
+private func metaHeapBase() -> UInt32 external("meta.__heap_base");
+private const heapBase: UInt64 = UInt64::metaHeapBase();
+
+// Amount of bytes to avoid splitting. Average VSL object is around 8-16 bytes
+// but given the 16 bytes required for a block header.
+
+// Reference to the base block
+private const baseBlock: WASMBlock = WASMBlock::0
+
+// Splits memory if appropriate.
+@inline
+private func splitBlock(block: WASMBlock, withSize size: UInt64) {
+    const originalSize = block.size
+
+    // See if enough space in block to create a new block (with size) and
+    // overcome pressure.
+    if block.size < size + Pointer<WASMBlock>.sizeof() + splitPressure {
+        // If block is not big enough don't split
+        return
+    }
+
+    // Set the block size
+    block.size = size
+
+
+    // Get the next block
+    let newBlock = block.nextAdjacentBlock
+
+    // [Header 1][Data 1][Header 2][Data 2]
+    //           [          Data 0        ]
+    // So the sizeof [Data 1] is size plus the header subtracted from the sizeof
+    // [Data 0]
+    let newBlockSize = originalSize - (size + Pointer<WASMBlock>.sizeof())
+
+    newBlock.nextBlock = block.nextBlock
+    newBlock.previousBlock = block
+    newBlock.size = newBlockSize
+    newBlock.isFree = 1
+
+    block.nextBlock = newBlock
+}
+
+// Finds the next free block
+private func findBlock(withSize size: UInt64) -> WASMBlock {
+    // Start at the base block
+    let block: WASMBlock = baseBlock
+    while !(Pointer<WASMBlock>::block).isNullPtr() {
+        // Check if block is big enough
+        if block.isFree != 0 && block.size >= size {
+            return block
+        }
+
+        block = block.nextBlock
+    }
+
+    // Current heap size
+    const currentMemorySize: UInt64 = safeMemorySize()
+
+    // See if the previous block is free, in that case we can just extend it
+    if block.isFree != 0 {
+        // See if there is enough memory
+        const expectedBlockEndPtr: UInt64 = UInt64::block.data.offset(by: Int64::size)
+
+        if expectedBlockEndPtr > currentMemorySize {
+            // See how much we need to grow memory by
+            const memoryNeeded = expectedBlockEndPtr - currentMemorySize
+            const pagesNeeded = memoryNeeded \ WASM_PAGE_SIZE + 1
+            safeMemoryGrow(by: UInt32::pagesNeeded)
+        }
+
+        // Now that we've extended the block we can update the size
+        const newMemorySize: UInt64 = safeMemorySize()
+        const newSize: UInt64 = newMemorySize - UInt64::block.data
+
+        block.size = newSize
+
+        return block
+    } else {
+        // If we couldn't find one we'll need to grow memory or create a new block.
+        // also at this point `block` will point to the last block
+        const blockSpaceNeeded: UInt64 = Pointer<WASMBlock>.sizeof() + size
+
+        // Get the end pointer of the new block
+        const lastBlockEndPtr: UInt64 = UInt64::block.data.offset(by: Int64::block.size)
+        const expectedBlockEndPtr: UInt64 = lastBlockEndPtr + blockSpaceNeeded
+
+        // see if enough space
+        if expectedBlockEndPtr > currentMemorySize {
+            // See how much we need to grow memory by
+            const memoryNeeded = expectedBlockEndPtr - currentMemorySize
+            const pagesNeeded = memoryNeeded \ WASM_PAGE_SIZE + 1
+            safeMemoryGrow(by: UInt32::pagesNeeded)
+        }
+
+        // Calculate new size
+        const newMemorySize: UInt64 = safeMemorySize()
+        const newSize = newMemorySize - (lastBlockEndPtr + Pointer<WASMBlock>.sizeof())
+
+        // Now set the new block
+        const newBlock = WASMBlock::lastBlockEndPtr
+        block.nextBlock = newBlock
+        newBlock.nextBlock = WASMBlock::0
+        newBlock.previousBlock = block
+        newBlock.isFree = 1
+        newBlock.size = newSize
+
+        return newBlock
+    }
+}
 
 // Allocations for WebAssembly
 @foreign(malloc)
 private func alloc(size: UInt64) -> OpaquePointer {
-    return OpaquePointer::0
+    assert(size <= MAXIMUM_BLOCK_SIZE, "VSL: cannot allocate more than 8 EiB")
+
+    // We'll need to init the heap it is the first allocation
+    if (Pointer<WASMBlock>::baseBlock).isNullPtr() {
+        // Ensure first block is big enough
+
+        // This is the pointer to the first byte of data that would be returned
+        // by this
+        const baseBlockDataOffset: UInt64 = heapBase + Pointer<WASMBlock>.sizeof()
+
+        let currentMemorySize: UInt64 = safeMemorySize()
+
+        // Check if we need more heap
+        if baseBlockDataOffset + size > currentMemorySize {
+            // See how much space is needed
+            const blockSpaceNeeded: UInt64 = (baseBlockDataOffset + size) - currentMemorySize
+
+            // See how many pages needed to allocate block space needed. Add one
+            // because int division rounds down
+            const pagesNeeded: UInt64 = blockSpaceNeeded \ WASM_PAGE_SIZE + 1
+
+            // Create enough space for the block
+            safeMemoryGrow(by: UInt32::pagesNeeded)
+        }
+
+        // At this point we know the heap is big enough for at least the first
+        // block so we'll do that.
+
+        // Get the new memory size and we'll see how much space we have for
+        // data. It'll be essentially be one giant block
+        currentMemorySize = safeMemorySize()
+        const newDataSize: UInt64 = currentMemorySize - baseBlockDataOffset
+
+        baseBlock = WASMBlock::heapBase
+        baseBlock.size = newDataSize
+        baseBlock.nextBlock = WASMBlock::0
+        baseBlock.previousBlock = WASMBlock::0
+
+        // Base block is not free because that's what we will return
+        baseBlock.isFree = 0
+
+        // Now we'll need to split this block so it's only as big as it needs
+        // to be
+        splitBlock(baseBlock, withSize: size)
+
+        debugInspect(UInt32::baseBlock)
+        return OpaquePointer::baseBlock
+    } else {
+        // Otherwise we'll need to try to find a block we can use
+        const freeBlock = findBlock(withSize: size)
+        freeBlock.isFree = 0
+
+        // Determine if we need to split it
+        splitBlock(freeBlock, withSize: size)
+        debugInspect(UInt32::freeBlock)
+        return OpaquePointer::freeBlock
+    }
 }
 
+// Stupid realloc which literally just free()s and malloc()s again UNLESS the
+// sum of
 private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
-    return OpaquePointer::0
+    free(source)
+    return alloc(newSize)
 }
 
 @foreign(free)

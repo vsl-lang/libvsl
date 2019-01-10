@@ -1,6 +1,3 @@
-private func alloc(size: UInt64) -> OpaquePointer external(malloc);
-private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer external(realloc);
-private func free(pointer: OpaquePointer) -> Void external(free);
 private func memcpy(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memcpy.p0i8.p0i8.i64");
 private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64, isVolatile: Bool) -> Void external("llvm.memmove.p0i8.p0i8.i64");
 
@@ -151,7 +148,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
     @inline
     public static func alloc(count: UInt64) -> Pointer<Type> {
         let newPointer = Pointer<Type>::alloc(size: count * Pointer<Type>.sizeof())
-        assert(!newPointer.isNullPtr(), "VSL: out of memory")
+        assert(!newPointer.isNullPtr(), "VSL: out of memory (alloc)")
         return newPointer
     }
 
@@ -164,7 +161,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
             newSize: Pointer<Type>.sizeof() * count
         );
 
-        assert(!newPtr.isNullPtr(), "VSL: out of memory")
+        assert(!newPtr.isNullPtr(), "VSL: out of memory (realloc)")
 
         return newPtr;
     }
