@@ -1,10 +1,13 @@
+// VSL WASM: heap allocation implementation
+// This uses a first fit technique by designing the heap as a linked list. This
+// rather aggressively merges blocks and is kind of similar to dlalloc. As a
+// result this has a few runtime properties. First, there are no adjacent free
+// memory blocks at any time. When free'd any adjacent blocks are merged
+// together.
+
+// Intrinsics
 private func memoryGrow(memIndex: UInt32, by size: UInt32) -> Int32 external("llvm.wasm.memory.grow.i32");
 private func memorySize(memIndex: UInt32) -> UInt32 external("llvm.wasm.memory.size.i32");
-
-// VSL WASM heap allocation implementation
-// This uses a first fit technique by designing the heap
-// as a linked list. This rather aggressively merges blocks
-// and is kind of similar to dlalloc
 
 // WASM Page size as designated in spec (64 Ki)
 // WebAssembly Core Specification § 4.2.8
@@ -50,6 +53,11 @@ private class WASMBlock {
     // Start of block data
     let data: Pointer<UInt8> {
         return Pointer<UInt8>::(Pointer<WASMBlock>::self).offset(by: 1)
+    }
+
+    // Returns if has next block
+    let hasNextBlock: Bool {
+        return !(Pointer<WASMBlock>::self.nextBlock).isNullPtr()
     }
 
     // Gets the would-be pointer of the adjacent block
@@ -102,7 +110,16 @@ private func splitBlock(block: WASMBlock, withSize size: UInt64) {
     block.nextBlock = newBlock
 }
 
+// Merged two ADJACENT blocks together. First argument MUST be DIRECTLY BEFORE
+// the second. Does not touch the data
+@inline
+private func mergeBlock(block firstBlock: WASMBlock, withBlock secondBlock: WASMBlock) {
+    firstBlock.nextBlock = secondBlock.nextBlock
+    firstBlock.size = firstBlock.size + Pointer<WASMBlock>.sizeof() + secondBlock.size
+}
+
 // Finds the next free block
+@inline
 private func findBlock(withSize size: UInt64) -> WASMBlock {
     // Start at the base block
     let block: WASMBlock = baseBlock
@@ -232,12 +249,49 @@ private func alloc(size: UInt64) -> OpaquePointer {
 
 // Stupid realloc which literally just free()s and malloc()s again UNLESS the
 // sum of
+@foreign(realloc)
 private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
-    free(source)
-    return alloc(newSize)
+    // Point to the actual block by backtracking header
+    const blockPointer = (Pointer<WASMBlock>::source).offset(by: -1)
+    const existingBlock = WASMBlock::blockPointer
+
+    // Check which way to go
+    if existingBlock.size == newSize: return source
+
+    if existingBlock.size > newSize {
+        splitBlock(existingBlock, withSize: newSize)
+        return source
+    }
+
+    // If the adjacent block is free and can contain then use that
+    if existingBlock.hasNextBlock && existingBlock.nextBlock.isFree && existingBlock.nextBlock.size + existingBlock.size >= newSize {
+        mergeBlock(existingBlock, withBlock: existingBlock.nextBlock)
+        splitBlock(existingBlock, withSize: newSize)
+        return source
+    } else {
+        // If doesn't have a next block, then we'll have to find a new block.
+
+        // Mark the current source as free, then we'll realloc and then memcpy
+        const existingSize = existingBlock.size
+        free(source)
+        const newPtr = Pointer<UInt8>::alloc(newSize)
+        newPtr.copy(from: Pointer<UInt8>::source, count: existingSize)
+        return OpaquePointer::newPtr
+    }
 }
 
 @foreign(free)
 private func free(pointer: OpaquePointer) -> Void {
+    // Point to the actual block by backtracking header
+    const blockPointer = (Pointer<WASMBlock>::source).offset(by: -1)
+    const existingBlock = WASMBlock::blockPointer
 
+    existingBlock.isFree = 0
+    if existingBlock.nextBlock && existingBlock.nextBlock.isFree {
+        mergeBlock(existingBlock, withBlock: existingBlock.nextBlock)
+    }
+
+    if existingBlock.previousBlock && existingBlock.previousBlock.isFree {
+        mergeBlock(existingBlock.previousBlock, withBlock: existingBlock)
+    }
 }

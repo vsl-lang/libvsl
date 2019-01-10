@@ -23,7 +23,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         memcpy(
             dest: OpaquePointer::self,
             source: OpaquePointer::source,
-            length: Pointer<Type>.sizeof(),
+            length: Pointer<Type>.sizeof() * count,
             isVolatile: false
         )
     }
@@ -35,7 +35,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         memcpy(
             dest: OpaquePointer::destination,
             source: OpaquePointer::self,
-            length: Pointer<Type>.sizeof(),
+            length: Pointer<Type>.sizeof() * count,
             isVolatile: false
         )
     }
@@ -74,7 +74,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         memmove(
             dest: OpaquePointer::self,
             source: OpaquePointer::source,
-            length: Pointer<Type>.sizeof(),
+            length: Pointer<Type>.sizeof() * count,
             isVolatile: false
         )
     }
@@ -89,7 +89,7 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         memmove(
             dest: OpaquePointer::destination,
             source: OpaquePointer::self,
-            length: Pointer<Type>.sizeof(),
+            length: Pointer<Type>.sizeof() * count,
             isVolatile: false
         )
     }
