@@ -218,7 +218,6 @@ private func alloc(size: UInt64) -> OpaquePointer {
         // to be
         splitBlock(baseBlock, withSize: size)
 
-        debugInspect(UInt32::baseBlock)
         return OpaquePointer::baseBlock
     } else {
         // Otherwise we'll need to try to find a block we can use
@@ -227,7 +226,6 @@ private func alloc(size: UInt64) -> OpaquePointer {
 
         // Determine if we need to split it
         splitBlock(freeBlock, withSize: size)
-        debugInspect(UInt32::freeBlock)
         return OpaquePointer::freeBlock
     }
 }
