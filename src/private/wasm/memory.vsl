@@ -283,7 +283,7 @@ private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
 @foreign(free)
 private func free(pointer: OpaquePointer) -> Void {
     // Point to the actual block by backtracking header
-    const blockPointer = (Pointer<WASMBlock>::source).offset(by: -1)
+    const blockPointer = (Pointer<WASMBlock>::pointer).offset(by: -1)
     const existingBlock = WASMBlock::blockPointer
 
     existingBlock.isFree = 0
