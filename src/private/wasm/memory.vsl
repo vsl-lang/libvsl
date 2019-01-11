@@ -82,6 +82,26 @@ private const heapBase: UInt64 = UInt64::metaHeapBase();
 // Reference to the base block
 private const baseBlock: WASMBlock = WASMBlock::0
 
+// Ensures that there is enough memory for a given block with size. Returns the
+// new data size for block. ONLY works for blocks at the end
+@inline
+private func ensureEnoughMemory(forBlock block: WASMBlock, withSize size: UInt64) -> UInt64 {
+    const expectedBlockEndPtr: UInt64 = UInt64::block.data.offset(by: Int64::size)
+    const currentMemorySize: UInt64 = safeMemorySize()
+
+    if expectedBlockEndPtr > currentMemorySize {
+        // See how much we need to grow memory by
+        const memoryNeeded = expectedBlockEndPtr - currentMemorySize
+        const pagesNeeded = memoryNeeded \ WASM_PAGE_SIZE + 1
+        safeMemoryGrow(by: UInt32::pagesNeeded)
+    }
+
+    const newMemorySize: UInt64 = safeMemorySize()
+
+    // Now that we've extended the block we can update the size
+    return newMemorySize - UInt64::block.data
+}
+
 // Splits memory if appropriate.
 @inline
 private func splitBlock(block: WASMBlock, withSize size: UInt64) {
@@ -143,50 +163,21 @@ private func findBlock(withSize size: UInt64) -> WASMBlock {
     // See if the previous block is free, in that case we can just extend it
     if block.isFree != 0 {
         // See if there is enough memory
-        const expectedBlockEndPtr: UInt64 = UInt64::block.data.offset(by: Int64::size)
-
-        if expectedBlockEndPtr > currentMemorySize {
-            // See how much we need to grow memory by
-            const memoryNeeded = expectedBlockEndPtr - currentMemorySize
-            const pagesNeeded = memoryNeeded \ WASM_PAGE_SIZE + 1
-            safeMemoryGrow(by: UInt32::pagesNeeded)
-        }
-
-        // Now that we've extended the block we can update the size
-        const newMemorySize: UInt64 = safeMemorySize()
-        const newSize: UInt64 = newMemorySize - UInt64::block.data
-
+        const newSize = ensureEnoughMemory(forBlock: block, withSize: size)
         block.size = newSize
 
         return block
     } else {
-        // If we couldn't find one we'll need to grow memory or create a new block.
-        // also at this point `block` will point to the last block
-        const blockSpaceNeeded: UInt64 = Pointer<WASMBlock>.sizeof() + size
-
         // Get the end pointer of the new block
-        const lastBlockEndPtr: UInt64 = UInt64::block.data.offset(by: Int64::block.size)
-        const expectedBlockEndPtr: UInt64 = lastBlockEndPtr + blockSpaceNeeded
-
-        // see if enough space
-        if expectedBlockEndPtr > currentMemorySize {
-            // See how much we need to grow memory by
-            const memoryNeeded = expectedBlockEndPtr - currentMemorySize
-            const pagesNeeded = memoryNeeded \ WASM_PAGE_SIZE + 1
-            safeMemoryGrow(by: UInt32::pagesNeeded)
-        }
-
-        // Calculate new size
-        const newMemorySize: UInt64 = safeMemorySize()
-        const newSize = newMemorySize - (lastBlockEndPtr + Pointer<WASMBlock>.sizeof())
+        const newBlock: WASMBlock = block.nextAdjacentBlock
+        const newBlockSize: UInt64 = ensureEnoughMemory(forBlock: newBlock, withSize: size)
 
         // Now set the new block
-        const newBlock = WASMBlock::lastBlockEndPtr
         block.nextBlock = newBlock
         newBlock.nextBlock = WASMBlock::0
         newBlock.previousBlock = block
         newBlock.isFree = 1
-        newBlock.size = newSize
+        newBlock.size = newBlockSize
 
         return newBlock
     }
@@ -203,33 +194,10 @@ private func alloc(size: UInt64) -> OpaquePointer {
 
         // This is the pointer to the first byte of data that would be returned
         // by this
-        const baseBlockDataOffset: UInt64 = heapBase + Pointer<WASMBlock>.sizeof()
-
-        let currentMemorySize: UInt64 = safeMemorySize()
-
-        // Check if we need more heap
-        if baseBlockDataOffset + size > currentMemorySize {
-            // See how much space is needed
-            const blockSpaceNeeded: UInt64 = (baseBlockDataOffset + size) - currentMemorySize
-
-            // See how many pages needed to allocate block space needed. Add one
-            // because int division rounds down
-            const pagesNeeded: UInt64 = blockSpaceNeeded \ WASM_PAGE_SIZE + 1
-
-            // Create enough space for the block
-            safeMemoryGrow(by: UInt32::pagesNeeded)
-        }
-
-        // At this point we know the heap is big enough for at least the first
-        // block so we'll do that.
-
-        // Get the new memory size and we'll see how much space we have for
-        // data. It'll be essentially be one giant block
-        currentMemorySize = safeMemorySize()
-        const newDataSize: UInt64 = currentMemorySize - baseBlockDataOffset
-
         baseBlock = WASMBlock::heapBase
-        baseBlock.size = newDataSize
+        const baseBlockSize = ensureEnoughMemory(forBlock: baseBlock, withSize: size)
+
+        baseBlock.size = baseBlockSize
         baseBlock.nextBlock = WASMBlock::0
         baseBlock.previousBlock = WASMBlock::0
 
@@ -240,7 +208,7 @@ private func alloc(size: UInt64) -> OpaquePointer {
         // to be
         splitBlock(baseBlock, withSize: size)
 
-        return OpaquePointer::baseBlock
+        return OpaquePointer::baseBlock.data
     } else {
         // Otherwise we'll need to try to find a block we can use
         const freeBlock = findBlock(withSize: size)
@@ -248,7 +216,7 @@ private func alloc(size: UInt64) -> OpaquePointer {
 
         // Determine if we need to split it
         splitBlock(freeBlock, withSize: size)
-        return OpaquePointer::freeBlock
+        return OpaquePointer::freeBlock.data
     }
 }
 
