@@ -220,8 +220,8 @@ private func alloc(size: UInt64) -> OpaquePointer {
     }
 }
 
-// Stupid realloc which literally just free()s and malloc()s again UNLESS the
-// sum of
+// Realloc will see if there are any adjacent blocks that can be used. Otherwise
+// copies
 @foreign(realloc)
 private func realloc(source: OpaquePointer, newSize: UInt64) -> OpaquePointer {
     // Point to the actual block by backtracking header

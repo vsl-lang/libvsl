@@ -1,0 +1,11 @@
+// These are a 32-bit version for JS communication.
+
+@foreign(malloc32)
+private func alloc32(size: UInt32) -> UInt32 {
+    return UInt32::alloc(size: UInt64::size)
+}
+
+@foreign(free32)
+private func free32(pointer: UInt32) {
+    free(OpaquePointer::pointer)
+}
