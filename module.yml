@@ -18,6 +18,10 @@ stdlib: false
 # own copy of the STL
 target: obj
 
+# Cache the stdlib compilation
+cache:
+    directory: cache
+
 # One-depth wildcard can be used but this also serves as an example module.ymlPath
 # and you usually in 99% of cases want a recursive vsl source path
 sources:
