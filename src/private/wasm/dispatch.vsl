@@ -1,0 +1,24 @@
+// @mock(ui32)
+// @dynamic(false)
+// private class JSReference {
+//     deinit {
+//         freeReference(index: UInt32::self)
+//     }
+// }
+//
+// private typealias WDSFrame = UInt32
+// private const WDS_HEADER_SIZE: UInt64 = 4
+// private const WDS_PARAM_TYPE_SIZE: UInt64 = 1
+// private const WDS_PARAM_VALUE_SIZE: UInt64 = 4
+//
+// private const WDS_PARAM_TYPE_OBJREF = 0x01
+// private const WDS_PARAM_TYPE_STRING = 0x00
+
+@mock(ui32)
+@dynamic(false)
+private class JSValue {
+    deinit { freeReference(index: UInt32::self) }
+}
+
+private func freeReference(index: UInt32) external("dispatch.freeReference");
+// private func wasmDispatch(base: JSReference, target: String, callStack: WASMDispatchStackFrame) external("dispatch.dispatch");
