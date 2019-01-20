@@ -14,11 +14,25 @@
 // private const WDS_PARAM_TYPE_OBJREF = 0x01
 // private const WDS_PARAM_TYPE_STRING = 0x00
 
+private func metaGlobal() -> UInt32 external("meta.__objectheap_global");
+private func metaUndefined() -> UInt32 external("meta.__objectheap_undefined");
+private func metaNull() -> UInt32 external("meta.__objectheap_null");
+
+// Constants
+public const JS_GLOBAL: JSValue = JSValue::metaGlobal();
+public const JS_UNDEFINED: JSValue = JSValue::metaUndefined();
+public const JS_NULL: JSValue = JSValue::metaNull();
+
+// JS bridging class
+typealias WASMDispatchStackFrame = Pointer<UInt8>
+
 @mock(ui32)
 @dynamic(false)
 private class JSValue {
-    deinit { freeReference(index: UInt32::self) }
-}
 
-private func freeReference(index: UInt32) external("dispatch.freeReference");
-// private func wasmDispatch(base: JSReference, target: String, callStack: WASMDispatchStackFrame) external("dispatch.dispatch");
+    func dispatchFree() external("dispatch.freeReference");
+    func dispatchAccess(target: String) -> JSValue external("dispatch.access");
+    func dispatch(target: String, stackFrame: WASMDispatchStackFrame) -> JSValue external("dispatch.dispatch");
+
+    deinit { self.dispatchFree() }
+}
