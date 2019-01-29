@@ -1,2 +1,14 @@
 @optionalProvider
-public class Optional<Type> {}
+@mock(Optional)
+@dynamic(false)
+public class Optional<Type> {
+    private const hasValue: Bool
+
+    /// This is unsafe to access/dereference if hasValue is false
+    private const value: Type
+
+    init(withValue value: Type) {
+        self.hasValue = true
+        self.value = value
+    }
+}

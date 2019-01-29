@@ -28,11 +28,75 @@ typealias WASMDispatchStackFrame = Pointer<UInt8>
 
 @mock(ui32)
 @dynamic(false)
-private class JSValue {
+public class JSValue {
 
-    func dispatchFree() external("dispatch.freeReference");
-    func dispatchAccess(target: String) -> JSValue external("dispatch.access");
-    func dispatch(target: String, stackFrame: WASMDispatchStackFrame) -> JSValue external("dispatch.dispatch");
+    /// Creates a JSValue encapsulating a VSL string. These does not create any
+    /// reference, instead creates a copy in the JS context.
+    public static func from(string: String) -> JSValue external("meta.objectheap.fromString");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(uint8: UInt8) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(uint16: UInt16) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(uint32: UInt32) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(int8: Int8) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(int16: Int16) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a JSValue encapsulating a VSL number. These does not create any
+    /// reference, instead creates a copy in the JS context. Use of this is not
+    /// recommended, instead to directly pass the number to the JS interface.
+    public static func from(int32: Int32) -> JSValue external("meta.objectheap.fromNumber");
+
+    /// Creates a copy of the (assumed to be) JS string reference in the VSL
+    /// heap. Undefined behavior if the value is not actually a JS value. Use
+    /// the `checked: true` parameter for safe operations.
+    public func toString(free: Bool = false, checked: Bool = false) -> String {
+        if checked {
+            // Get the 'String' class from the global object and use that.
+            assert(self.dispatchInstanceOf(jsClass: JS_GLOBAL.dispatchAccess("String")), "invalid attempt to cast non-string to string")
+        }
+
+        let stringLength = UInt64::self.dispatchGetStringLength()
+        let ptr = Pointer<UInt8>.alloc(count: stringLength + 1)
+
+        // Set null byte at end
+        ptr.offset(by: Int64::stringLength).store(value: 0x00)
+
+        // Copy the string from JS -> VSL
+        self.dispatchCopyString(to: ptr)
+
+        if free {
+            self.dispatchFree()
+        }
+
+        return String(value: ptr, byteLength: UInt::stringLength)
+    }
+
+    private func dispatchGetStringLength() -> UInt32 external("dispatch.readStringLength");
+    private func dispatchCopyString(to pointer: Pointer<UInt8>) external("dispatch.copyString");
+
+    public func dispatchInstanceOf(jsClass: JSValue) -> Bool external("dispatch.instanceOf");
+    public func dispatchFree() external("dispatch.freeReference");
+    public func dispatchAccess(target: String) -> JSValue external("dispatch.access");
+    public func dispatchAnon(target: String) -> JSValue external("dispatch.anon");
+    public func dispatch(target: String, stackFrame: WASMDispatchStackFrame) -> JSValue external("dispatch.dispatch");
 
     deinit { self.dispatchFree() }
 }
