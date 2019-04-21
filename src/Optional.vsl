@@ -1,4 +1,4 @@
-@optionalProvider
+@optionalType
 @mock(Optional)
 @dynamic(false)
 public class Optional<Type> {

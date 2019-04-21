@@ -23,6 +23,9 @@ public const JS_GLOBAL: JSValue = JSValue::metaGlobal();
 public const JS_UNDEFINED: JSValue = JSValue::metaUndefined();
 public const JS_NULL: JSValue = JSValue::metaNull();
 
+public lazy const JS_ARRAY: JSValue = JS_GLOBAL.dispatchAccess("Array");
+public lazy const JS_STRING: JSValue = JS_GLOBAL.dispatchAccess("String");
+
 // JS bridging class
 typealias WASMDispatchStackFrame = Pointer<UInt8>
 
@@ -70,7 +73,7 @@ public class JSValue {
     public func toString(free: Bool = false, checked: Bool = false) -> String {
         if checked {
             // Get the 'String' class from the global object and use that.
-            assert(self.dispatchInstanceOf(jsClass: JS_GLOBAL.dispatchAccess("String")), "invalid attempt to cast non-string to string")
+            assert(self.dispatchInstanceOf(jsClass: JS_STRING), "invalid attempt to cast non-string to string")
         }
 
         let stringLength = UInt64::self.dispatchGetStringLength()
