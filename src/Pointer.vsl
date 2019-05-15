@@ -130,7 +130,8 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
     public func store(value: Type) -> Void native(store)
 
     /// Offsets a pointer by an amount. This is a signed integer so pass a negative
-    /// number to advance in reverse.
+    /// number to advance in reverse. This offset in increments of [Type]. To
+    /// go by bytes you would cast the pointer to Pointer<UInt8>.
     @inline
     public func offset(by: Int64) -> Pointer<Type> native(offset)
 
@@ -138,6 +139,11 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
     @inline
     public func isNullPtr() -> Bool {
         return UInt64::self == 0
+    }
+
+    /// Returns the pointer as a 'byte' pointer or a [Pointer<UInt8>]
+    public let bytePointer: Pointer<UInt8> {
+        return Pointer<UInt8>::bytePointer
     }
 
     /// Returns sizeof passed type

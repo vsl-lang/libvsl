@@ -23,7 +23,7 @@ public class Array<Type> {
     }
 
     /// Create an empty array with a given internal capacity. You can use
-    public init(initialCapacity: UInt) {
+    public init(initialCapacity: UInt = 4) {
         self.capacity = initialCapacity
         self.contentLength = 0
         self.data = Pointer<Type>.alloc(count: UInt64::initialCapacity)
@@ -64,6 +64,60 @@ public class Array<Type> {
 
         self.data.store(value: element)
         self.contentLength += 1
+    }
+
+    /// Subscript access for index. Indexes start at zero to [Array#length] - 1.
+    /// Negative indexes start indexing from the back of the array. This will
+    /// panic if an invalid index is attempted to be indexed. To access as an
+    /// optional you can use [Array#get].
+    public subscript(index: Int) -> Type {
+        let physicalIndex = Int64::self.convertToPhysicalIndex(index)
+
+        assert(physicalIndex >= 0 && physicalIndex < Int64::self.length, "Attempted to access array at position for which it has no value.")
+        return self.data.offset(by: physicalIndex).dereference()
+    }
+
+    /// Subscript access which returns a subarray. This is [A, B). So calling
+    /// this as `sliceFrom: 1, to: 1` would return an empty array. If the end
+    /// index is less than or equal to the start index no value will be returned.
+    /// Negaative values will be handled like in a normal subscript. If the
+    /// second is past the end of the array it will merely return as many items
+    /// as possible
+    public subscript(sliceFrom startIndex: Int, to endIndex: Int) -> Array<Type> {
+        const physicalStartIndex = Int64::self.convertToPhysicalIndex(startIndex)
+        const physicalEndIndex = Int64::self.convertToPhysicalIndex(endIndex)
+
+        if physicalEndIndex <= physicalStartIndex {
+            return Array<Type>()
+        }
+
+        const netLength = UInt::(physicalEndIndex - physicalStartIndex)
+        const newArray = Array<Type>(initialCapacity: netLength)
+
+        // copy from current array to new array
+        self.data.offset(by: physicalStartIndex)
+            .copy(to: newArray.data, UInt64::netLength)
+
+        return newArray
+    }
+
+    /// Subscript access which returns a subarray using a length and start
+    /// index. Negative index values are supported but a negative or zero length
+    /// will return an empty array.
+    public subscript(sliceFrom startIndex: Int, count: Int) -> Array<Type> {
+        const physicalStartIndex = self.convertToPhysicalIndex(startIndex)
+
+        return self[sliceFrom: physicalStartIndex, to: physicalStartIndex + count]
+    }
+
+    // Normalize negative values
+    @inline
+    private func convertToPhysicalIndex(index: Int) -> Int {
+        if index < 0 {
+            return self.length + index
+        } else {
+            return index
+        }
     }
 
     // Expand array capacity
