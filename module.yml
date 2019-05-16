@@ -52,5 +52,8 @@ linker:
 
 # Specify options for the documentation generator
 docgen:
+    # Override the docgen titel
+    title: Standard Library
+
     # The theme color for the documentation.
     themeColor: '#E26350'
