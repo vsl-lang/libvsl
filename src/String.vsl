@@ -153,6 +153,18 @@ public class String {
         self.internalLength = strlen(string: Pointer<UInt8>::value)
     }
 
+
+    /// Appends to the internal string buffer. Use of this is very much
+    /// discouraged since strings should otherwise be immutable. There are very
+    /// limited use cases for this and this likely would have unintended side
+    /// effects.
+    public func append(string: String) {
+        const newDataLength: UInt64 = UInt64::self.internalLength + UInt64::string.internalLength + 1
+        self.underlyingData = self.underlyingData.realloc(count: newDataLength)
+        self.underlyingData.offset(by: UInt64::self.internalLength).copy(from: string.underlyingData)
+        self.underlyingData.offset(by: newDataLength).store(value: 0x00)
+    }
+
     /// Creates a substring from a string. This slices a string 0-indexed from
     /// [start, end). Negative parameters refer to the end of the array. This
     /// means `-1` will refer to just before the last item.
@@ -228,9 +240,9 @@ public class String {
     }
 
     // Allocation states:
-    // @parameter(0, contained)
-    // @parameter(1, contained)
-    // @alloc(unmanaged)
+    // @uncaptured lhs
+    // @uncaptured rhs
+    // -> @uncaptured
     /// Concatenate two strings together.
     public static func +(lhs: String, rhs: String) -> String {
         let newLength: UInt = lhs.internalLength + rhs.internalLength
