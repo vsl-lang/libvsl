@@ -3,9 +3,19 @@ apt:
         - llvm-toolchain-trusty-7
         - clang-7.0
 
+language: bash
+
+# Use VSL supported node.js
+node_js:
+    - 10
+
 install:
-    # Build with vsl@master
+    # Build with latest VSL
     - npm i -g vsl-lang/vsl#master
+
+cache:
+    directories:
+        - node_modules
 
 before_deploy:
     - vsl docgen . -o docs/
