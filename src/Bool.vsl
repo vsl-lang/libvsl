@@ -13,7 +13,7 @@
 // This has the benefit that you must explicitly specify what you want to check
 // and reduces confusion for someone reading code.
 @primitive(Boolean)
-@booleanProvider
+@booleanType
 @mock(i1) public class Bool {
 
     private init() {}
@@ -21,6 +21,11 @@
     @backend(llvm)
     @inline(always)
     public static func ==(lhs: Bool, rhs: Bool) -> Bool native(ieq)
+
+
+    @backend(llvm)
+    @inline(always)
+    public static func !=(lhs: Bool, rhs: Bool) -> Bool native(ineq)
 
     @backend(llvm)
     @inline(always)
