@@ -1,0 +1,17 @@
+apt:
+    packages:
+        - llvm-toolchain-trusty-7
+        - clang-7.0
+
+install:
+    # Build with vsl@master
+    - npm i -g vsl-lang/vsl#master
+
+before_deploy:
+    - vsl docgen . -o docs/
+
+deploy:
+    skip_cleanup: true
+    provider: surge
+    project: docs/
+    domain: docs.vsl.vihan.org
