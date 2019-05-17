@@ -159,10 +159,13 @@ public class String {
     /// limited use cases for this and this likely would have unintended side
     /// effects.
     public func append(string: String) {
+        // Create new string block that is long enough
         const newDataLength: UInt64 = UInt64::self.internalLength + UInt64::string.internalLength + 1
         self.underlyingData = self.underlyingData.realloc(count: newDataLength)
-        self.underlyingData.offset(by: UInt64::self.internalLength).copy(from: string.underlyingData)
-        self.underlyingData.offset(by: newDataLength).store(value: 0x00)
+
+        // Store new string
+        self.underlyingData.offset(by: Int64::self.internalLength).copy(from: string.underlyingData)
+        self.underlyingData.offset(by: Int64::newDataLength).store(value: 0x00)
     }
 
     /// Creates a substring from a string. This slices a string 0-indexed from
