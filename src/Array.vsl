@@ -22,7 +22,7 @@ public class Array<Type> {
         return Int::self.contentLength
     }
 
-    /// Create an empty array with a given internal capacity. You can use
+    /// Create an empty array with a given internal capacity.
     public init(initialCapacity: UInt) {
         self.capacity = initialCapacity
         self.contentLength = 0
