@@ -23,7 +23,7 @@ public class Array<Type> {
         return Int::self.contentLength
     }
 
-    /// Create an empty array with a given internal capacity. 
+    /// Create an empty array with a given internal capacity.
     public init(initialCapacity: UInt = 4) {
         self.capacity = initialCapacity
         self.contentLength = 0
@@ -113,7 +113,7 @@ public class Array<Type> {
     public subscript(from startIndex: Int, count: Int) -> Array<Type> {
         const physicalStartIndex = self.convertToPhysicalIndex(startIndex)
 
-        return self[sliceFrom: physicalStartIndex, to: physicalStartIndex + count]
+        return self[from: physicalStartIndex, to: physicalStartIndex + count]
     }
 
     // Normalize negative values
