@@ -8,14 +8,15 @@ public class Array<Type> {
     // Array options
     private let options: UInt8 = 0
 
-    // Internal capacity of the array
-    private let capacity: UInt
-
-    // Length of the physical content
+    // Length of the physical content. This should always be less than or equal
+    // to capacity otherwise something has gone very wrong.
     private let contentLength: UInt
 
     // Pointer to  the data
     private let data: Pointer<Type>
+
+    // Internal capacity of the array
+    private let capacity: UInt
 
     /// Gets the length of the array
     public let length: Int {
@@ -91,8 +92,13 @@ public class Array<Type> {
             return Array<Type>()
         }
 
-        const netLength = UInt::(physicalEndIndex - physicalStartIndex)
+        const netLength = min(
+            UInt::(physicalEndIndex - physicalStartIndex),
+            self.contentLength
+        )
+
         const newArray = Array<Type>(initialCapacity: netLength)
+        newArray.contentLength = netLength
 
         // copy from current array to new array
         self.data.offset(by: physicalStartIndex)
@@ -101,9 +107,9 @@ public class Array<Type> {
         return newArray
     }
 
-    /// Subscript access which returns a subarray using a length and start
-    /// index. Negative index values are supported but a negative or zero length
-    /// will return an empty array.
+    // Subscript access which returns a subarray using a length and start
+    // index. Negative index values are supported but a negative or zero length
+    // will return an empty array.
     public subscript(sliceFrom startIndex: Int, count: Int) -> Array<Type> {
         const physicalStartIndex = self.convertToPhysicalIndex(startIndex)
 

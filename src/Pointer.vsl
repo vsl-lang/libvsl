@@ -143,12 +143,20 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
 
     /// Returns the pointer as a 'byte' pointer or a [Pointer<UInt8>]
     public let bytePointer: Pointer<UInt8> {
-        return Pointer<UInt8>::bytePointer
+        return Pointer<UInt8>::self
     }
 
-    /// Returns sizeof passed type
+    /// Returns sizeof what this points to.
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
+
+    /// Returns the 'underlying' sizeof of a provided type. What this means if
+    /// the underlying type itself is a pointer to the actual item that contains
+    /// the data, this will return the sizeof that. An example is if there is a
+    /// class 'Animal', Pointer<Animal>.underlyingSizeof() will return the sizeof
+    /// the data struct for 'animal' not the sizeof an Animal*.
+    @inline(always)
+    public static func underlyingSizeof() -> UInt64 native(sizeofUnderlying)
 
     /// Alocates a count instances of a passed type.
     @inline
