@@ -1,0 +1,30 @@
+apt:
+    packages:
+        - llvm-toolchain-trusty-7
+        - clang-7.0
+
+# Use VSL supported node.js
+language: node_js
+node_js:
+    - 10
+
+install:
+    # Build with latest VSL
+    - npm i -g vsl-lang/vsl#master
+
+cache:
+    directories:
+        - node_modules
+
+script:
+    # Build static library
+    - vsl build . -o libvsl.so -Xl -shared
+
+before_deploy:
+    - vsl docgen . -o docs/
+
+deploy:
+    skip_cleanup: true
+    provider: surge
+    project: docs/
+    domain: docs.vsl.vihan.org

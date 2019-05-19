@@ -1,2 +1,5 @@
 cache
 .vsl-temp*
+docs
+libvsl.so
+libvsl.dylib
