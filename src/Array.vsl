@@ -84,7 +84,7 @@ public class Array<Type> {
     /// Negaative values will be handled like in a normal subscript. If the
     /// second is past the end of the array it will merely return as many items
     /// as possible
-    public subscript(sliceFrom startIndex: Int, to endIndex: Int) -> Array<Type> {
+    public subscript(from startIndex: Int, to endIndex: Int) -> Array<Type> {
         const physicalStartIndex = Int64::self.convertToPhysicalIndex(startIndex)
         const physicalEndIndex = Int64::self.convertToPhysicalIndex(endIndex)
 
@@ -110,7 +110,7 @@ public class Array<Type> {
     // Subscript access which returns a subarray using a length and start
     // index. Negative index values are supported but a negative or zero length
     // will return an empty array.
-    public subscript(sliceFrom startIndex: Int, count: Int) -> Array<Type> {
+    public subscript(from startIndex: Int, count: Int) -> Array<Type> {
         const physicalStartIndex = self.convertToPhysicalIndex(startIndex)
 
         return self[sliceFrom: physicalStartIndex, to: physicalStartIndex + count]
