@@ -130,7 +130,8 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
     public func store(value: Type) -> Void native(store)
 
     /// Offsets a pointer by an amount. This is a signed integer so pass a negative
-    /// number to advance in reverse.
+    /// number to advance in reverse. This offset in increments of [Type]. To
+    /// go by bytes you would cast the pointer to Pointer<UInt8>.
     @inline
     public func offset(by: Int64) -> Pointer<Type> native(offset)
 
@@ -140,9 +141,22 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         return UInt64::self == 0
     }
 
-    /// Returns sizeof passed type
+    /// Returns the pointer as a 'byte' pointer or a [Pointer<UInt8>]
+    public let bytePointer: Pointer<UInt8> {
+        return Pointer<UInt8>::self
+    }
+
+    /// Returns sizeof what this points to.
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
+
+    /// Returns the 'underlying' sizeof of a provided type. What this means if
+    /// the underlying type itself is a pointer to the actual item that contains
+    /// the data, this will return the sizeof that. An example is if there is a
+    /// class 'Animal', Pointer<Animal>.underlyingSizeof() will return the sizeof
+    /// the data struct for 'animal' not the sizeof an Animal*.
+    @inline(always)
+    public static func underlyingSizeof() -> UInt64 native(sizeofUnderlying)
 
     /// Alocates a count instances of a passed type.
     @inline
