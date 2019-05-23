@@ -168,10 +168,25 @@ public class String {
         self.underlyingData.offset(by: Int64::newDataLength).store(value: 0x00)
     }
 
+    /// Access the nth BYTE in a string, returning a new string. If you which to
+    /// access the nth character you'll need unicode strings enabled which is
+    /// yet to be added.
+    public subscript(at index: Int) -> String {
+        let normalizedIndex: Int64 = index < 0 ? Int64::self.internalLength + Int64::index : Int64::index
+        assert(normalizedIndex >= 0 && normalizedIndex < Int64::self.internalLength, "Attempted to access string out of bounds.")
+
+        let newPtr = Pointer<UInt8>.alloc(1);
+        self.underlyingData
+            .offset(by: normalizedIndex)
+            .copy(to: newPtr, count: 1)
+
+        return String(value: newPtr, byteLength: 1)
+    }
+
     /// Creates a substring from a string. This slices a string 0-indexed from
     /// [start, end). Negative parameters refer to the end of the array. This
     /// means `-1` will refer to just before the last item.
-    public func substring(from startIndex: Int, to endIndex: Int) -> String {
+    public subscript(from startIndex: Int, to endIndex: Int = Int::self.internalLength) -> String {
         if startIndex > Int::self.internalLength {
             return ""
         }
@@ -191,30 +206,6 @@ public class String {
             .copy(to: newPtr, count: UInt64::newLength)
 
         return String(value: newPtr, byteLength: UInt::newLength)
-    }
-
-    /// Substrings from a given point to the end of the string. A negative number
-    /// as a parameter is invalid. Use `String.tail` if you wish for that. If a
-    /// number zero or less is passed an empty string will be returned.
-    /// Alternatively if the given point is past the index at the end of the
-    /// string, an empty string will be returned.
-    public func substring(from index: Int) -> String {
-        if index < 0 || index >= Int::self.internalLength {
-            return ""
-        }
-
-        return self.substring(from: index, to: Int::self.internalLength)
-    }
-
-    /// Obtains the first n characters from a string. This is identical to
-    /// calling [String#substring(from:to:)] with `from: 0`.
-    public func head(to index: Int) -> String {
-        return self.substring(from: 0, to: index)
-    }
-
-    /// Obtains the last n characters from a string.
-    public func tail(to index: Int) -> String {
-        return self.substring(from: -index, to: Int::self.internalLength)
     }
 
     /// Searches current string for the index of a substring. This returns -1
