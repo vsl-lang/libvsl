@@ -5,6 +5,9 @@ const ARRAY_DEALLOC_OPT_OUT: UInt8 = 1 << 0;
 @primitive(List)
 public class Array<Type> {
 
+    // Note: The order the first three array fields is very important and should
+    // not be touched.
+
     // Array options
     private let options: UInt8 = 0
 
@@ -17,6 +20,8 @@ public class Array<Type> {
 
     // Internal capacity of the array
     private let capacity: UInt
+
+
 
     /// Gets the length of the array
     public let length: Int {
@@ -32,7 +37,9 @@ public class Array<Type> {
 
     /// Create an array from a C-style array/pointer with a given length, if
     /// the length of pointer is invalid behavior is undefined. Deallocation is
-    /// opted out by default with this.
+    /// opted out by default with this. Do note that if the array is expanded
+    /// then the pointer will not be deallocated. Only keep persistent pointers
+    /// in VSL array of to interface with.
     public init(cArray: Pointer<Type>, length: UInt) {
         self.capacity = length
         self.contentLength = length
