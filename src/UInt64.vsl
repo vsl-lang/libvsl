@@ -83,6 +83,39 @@
     @inline(always)
     public static func -(expression: UInt64) -> UInt64 native(ineg)
 
+    /// Converts to string
+    func toString(base: Int = 10) -> String {
+        assert(base > 0, "UInt64#toString(base:): base must be positive")
+        assert(base <= 26, "UInt64#toString(base:): base must be at most 26")
+
+        if self == 0 { return "0" }
+
+        let content = Array<UInt8>(initialCapacity: 4)
+        content.deallocOptOut()
+
+        let n: UInt64 = self
+
+        // This operates from right to left (in reverse).
+        do {
+            let digit = n % UInt64::base
+
+            if digit < 0x0A {
+                // 48 is char code for '0'
+                content.append(value: 48 + UInt8::digit)
+            } else {
+                // 65 is char code for 'A'
+                content.append(value: 65 + UInt8::digit - 0x0A)
+            }
+        } while (n \= UInt64::base) != 0
+
+        // Because string is constructed backwards we must reverse it
+        content.reverse()
+        content.append(0x00) // Add terminating null byte
+
+        const returnValue = String(value: content.internalDataBuffer, byteLength: UInt::content.length)
+        return returnValue
+    }
+
     /// Generates random number in range [from, to)
     public static func random(from start: UInt64, to end: UInt64) -> UInt64 {
         assert(end > start, "Random end must be greater than start")

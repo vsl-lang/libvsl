@@ -28,6 +28,12 @@ public class Array<Type> {
         return Int::self.contentLength
     }
 
+    /// Dangerously obtains the internal content of the array. Do note this is
+    /// tied with array allocation state.
+    public let internalDataBuffer: Pointer<Type> {
+        return self.data
+    }
+
     /// Create an empty array with a given internal capacity.
     public init(initialCapacity: UInt = 4) {
         self.capacity = initialCapacity
@@ -49,7 +55,7 @@ public class Array<Type> {
     }
 
     /// Appends an element to the end of the array
-    public func append(element: Type) -> Void {
+    public func append(value element: Type) -> Void {
         if self.contentLength == self.capacity {
             self.reallocateArray()
         }
@@ -62,7 +68,7 @@ public class Array<Type> {
     }
 
     /// Prepends an element to the beginning of the array
-    public func prepend(element: Type) -> Void {
+    public func prepend(value element: Type) -> Void {
         if self.contentLength == self.capacity {
             self.reallocateArray()
         }
@@ -72,6 +78,22 @@ public class Array<Type> {
 
         self.data.store(value: element)
         self.contentLength += 1
+    }
+
+    /// Performs in IN-PLACE REVERSAL of the array. This does not return a new
+    /// copy for that used the [Array#reserved()] method.
+    public func reverse() -> Void {
+        let i: Int64 = 0
+        let j: Int64 = Int64::self.contentLength - 1
+
+        while i < j {
+            let temp = self.data.offset(by: i).dereference()
+            self.data.offset(by: i).store(value: self.data.offset(by: j).dereference())
+            self.data.offset(by: j).store(temp)
+
+            i += 1
+            j -= 1
+        }
     }
 
     /// Subscript access for index. Indexes start at zero to [Array#length] - 1.
@@ -114,9 +136,9 @@ public class Array<Type> {
         return newArray
     }
 
-    // Subscript access which returns a subarray using a length and start
-    // index. Negative index values are supported but a negative or zero length
-    // will return an empty array.
+    /// Subscript access which returns a subarray using a length and start
+    /// index. Negative index values are supported but a negative or zero length
+    /// will return an empty array.
     public subscript(from startIndex: Int, count: Int) -> Array<Type> {
         const physicalStartIndex = self.convertToPhysicalIndex(startIndex)
 
@@ -145,6 +167,12 @@ public class Array<Type> {
         } else {
             self.data = self.data.realloc(count: UInt64::self.capacity)
         }
+    }
+
+    /// Prevents the backing buffer from being deallocated by VSL. Use this if
+    /// you get the value from an external source
+    public func deallocOptOut() {
+        self.options |= STRING_DEALLOC_OPT_OUT;
     }
 
     deinit {

@@ -1,5 +1,4 @@
 @optionalType
-@mock(Optional)
 @dynamic(false)
 public class Optional<Type> {
     private const hasValue: Bool
@@ -7,7 +6,10 @@ public class Optional<Type> {
     /// This is unsafe to access/dereference if hasValue is false
     private const value: Type
 
-    init(withValue value: Type) {
+    /// Creates an optional with a value. Usage of this constructor is
+    /// highly discouraged. Used the syntax `value?` or an implicit optional
+    /// cast if possible.
+    public init(withValue value: Type) {
         self.hasValue = true
         self.value = value
     }

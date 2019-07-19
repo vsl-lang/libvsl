@@ -215,7 +215,7 @@ public class String {
     //     if substring.byteLength > self.internalLength { return -1 }
     // }
 
-    /// Prevents the backing pointer from being deallocated by VSL. Use this if
+    /// Prevents the backing buffer from being deallocated by VSL. Use this if
     /// you get the value from an external source
     public func deallocOptOut() {
         self.options |= STRING_DEALLOC_OPT_OUT;

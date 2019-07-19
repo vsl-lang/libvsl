@@ -133,7 +133,51 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
     /// number to advance in reverse. This offset in increments of [Type]. To
     /// go by bytes you would cast the pointer to Pointer<UInt8>.
     @inline
-    public func offset(by: Int64) -> Pointer<Type> native(offset)
+    public func offset(by count: Int64) -> Pointer<Type> native(offset)
+
+    /// Offsets a pointer by an amount. This is a signed integer so pass a negative
+    /// number to advance in reverse. This offset in increments of [Type]. To
+    /// go by bytes you would cast the pointer to Pointer<UInt8>.
+    @inline
+    public func offset(by count: Int) -> Pointer<Type> {
+        return self.offset(by: Int64::count)
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func +(lhs: Pointer<Type>, rhs: Int64) -> Pointer<Type> {
+        return self.offset(by: rhs)
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func +(lhs: Pointer<Type>, rhs: UInt64) -> Pointer<Type> {
+        return self.offset(by: Int64::rhs)
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func +(lhs: Pointer<Type>, rhs: Int) -> Pointer<Type> {
+        return self.offset(by: rhs)
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func +(lhs: Pointer<Type>, rhs: UInt) -> Pointer<Type> {
+        return self.offset(by: Int::rhs)
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func -(lhs: Pointer<Type>, rhs: UInt64) -> Pointer<Type> {
+        return self.offset(by: -(Int64::rhs))
+    }
+
+    /// See [Pointer#offset(by:)].
+    @inline
+    public static func -(lhs: Pointer<Type>, rhs: UInt) -> Pointer<Type> {
+        return self.offset(by: -(Int::rhs))
+    }
 
     /// Returns if the current pointer is a null pointer.
     @inline
@@ -146,7 +190,12 @@ private func memmove(dest: OpaquePointer, source: OpaquePointer, length: UInt64,
         return Pointer<UInt8>::self
     }
 
-    /// Returns sizeof what this points to.
+    /// Returns sizeof what this points to. Do note that classes are actually
+    /// pointers to their internal data buffer so calling this on a pointer to
+    /// a class will actually return the size of the pointer. To obtain the
+    /// sizeof a pointer's true content use either the [Reflection#heapSize()]
+    /// to obtain the size of an object's representation in the heap or use the
+    /// [Pointer#underlyingSizeof()] which does roughly the same.
     @inline(always)
     public static func sizeof() -> UInt64 native(sizeof)
 
