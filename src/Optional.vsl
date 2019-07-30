@@ -1,15 +1,14 @@
 @optionalType
 @dynamic(false)
-public class Optional<Type> {
+public struct Optional<Type> {
     private const hasValue: Bool
 
     /// This is unsafe to access/dereference if hasValue is false
     private const value: Type
 
-    /// Creates an optional with a value. Usage of this constructor is
-    /// highly discouraged. Used the syntax `value?` or an implicit optional
-    /// cast if possible.
-    public init(withValue value: Type) {
+    /// Creates an optional with a value. Use the syntax to create an optional
+    /// rather than the constructor as this is an implementation detail.
+    init(withValue value: Type) {
         self.hasValue = true
         self.value = value
     }
