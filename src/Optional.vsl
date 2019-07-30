@@ -12,4 +12,18 @@ public struct Optional<Type> {
         self.hasValue = true
         self.value = value
     }
+
+    /// Comparison overloads for optionals where T implements equatable. If you
+    /// wish to check for nil otherwise you can use the `===` operator which
+    /// checks reference equality. Internally, all VSL `nil` instances stem from
+    /// the same value
+    public static func ==(lhs: Optional<Type>, rhs: Optional<Type>) -> Bool {
+        if lhs.hasValue == true && rhs.hasValue == true {
+            // Otherwise compare the underlying values
+            return true // TODO: Implement with interfaces
+        } else {
+            // If one is nil then both must be nil for this to be true
+            return lhs.hasValue == rhs.hasValue
+        }
+    }
 }
